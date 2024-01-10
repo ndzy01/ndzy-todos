@@ -1,0 +1,45 @@
+.ndzy-layout {
+  background-color: #f7f9fb;
+}
+
+.ndzy-header {
+  top: 0;
+  position: sticky;
+  background-color: rgba(247, 249, 251, 0.9);
+  backdrop-filter: blur(6px);
+  padding: 0 8px !important;
+}
+
+.ndzy-menu {
+  width: 100% !important;
+}
+
+.between {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 8px;
+  width: 100%;
+}
+
+.w-100 {
+  width: 100%;
+}
+
+.sky-blue {
+  color: skyblue;
+}
+
+.center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.p-16 {
+  padding: 16px;
+}
+
+.todo-item:hover {
+  background-color: skyblue;
+}
