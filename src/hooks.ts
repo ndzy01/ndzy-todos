@@ -301,6 +301,19 @@ export const useTodo = () => {
     }
     window.location.reload();
   };
+  const delLocalData = (id: string) => {
+    const localData = JSON.parse(localStorage.getItem('DATA') as any);
+    localData.todoList = localData.todoList.filter((item: any) => item.id !== id);
+    localStorage.setItem('DATA', JSON.stringify(localData));
+    dispatch({
+      type: 'UPDATE',
+      payload: {
+        list: localData.todoList,
+        loading: false,
+      },
+    });
+    getAllTodo();
+  };
   return {
     inputValue,
     users,
@@ -324,5 +337,6 @@ export const useTodo = () => {
     isLocal,
     switchData,
     switchService,
+    delLocalData,
   };
 };

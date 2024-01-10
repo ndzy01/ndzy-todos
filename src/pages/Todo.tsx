@@ -17,7 +17,7 @@ const Todo = () => {
     itemHeight: 60,
     overscan: 10,
   });
-  const { initUser, initTags, getAllTodo, finishTodo, delTodo, recoverTodo, isLocal } = useTodo();
+  const { initUser, initTags, getAllTodo, finishTodo, delTodo, recoverTodo, delLocalData, isLocal } = useTodo();
   useMount(() => {
     initUser();
     initTags();
@@ -56,6 +56,11 @@ const Todo = () => {
                       <Drawer title="编辑" btnName="编辑" {...ele.data}>
                         <EditTodo />
                       </Drawer>
+                    )}
+                    {isLocal && (
+                      <Button type="link" onClick={() => delLocalData(ele.data.id)}>
+                        删除
+                      </Button>
                     )}
                     {isLocal && (
                       <Button type="link" onClick={() => {}}>
