@@ -17,9 +17,9 @@ export const useTodo = () => {
   const initUser = () => {
     dispatch({ type: 'UPDATE', payload: { loading: true } });
     serviceAxios
-      .get('/users')
+      .get('/users/loginInfo')
       .then((res) => {
-        dispatch({ type: 'UPDATE', payload: { user: res.data, loading: false } });
+        dispatch({ type: 'UPDATE', payload: { user: res.data[0], loading: false } });
       })
       .catch(() => {
         dispatch({ type: 'UPDATE', payload: { loading: false } });
@@ -265,7 +265,7 @@ export const useTodo = () => {
     dispatch({ type: 'UPDATE', payload: { loading: true } });
     initUser();
     serviceAxios
-      .get('/users/all')
+      .get('/users')
       .then((res) => {
         dispatch({ type: 'UPDATE', payload: { loading: false } });
         setUsers(res.data);
