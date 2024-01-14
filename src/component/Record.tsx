@@ -34,7 +34,7 @@ const Record = () => {
         <Form.Item label="txt" name="txt" rules={[{ required: true, message: '不能为空' }]}>
           <Input placeholder="请输入" />
         </Form.Item>
-        <Form.Item label="txtInfo" name="txtInfo" rules={[{ required: true, message: '不能为空' }]}>
+        <Form.Item label="txtInfo" name="txtInfo">
           <Input placeholder="请输入" />
         </Form.Item>
 
