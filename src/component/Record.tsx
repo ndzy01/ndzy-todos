@@ -46,7 +46,7 @@ const Record = () => {
       </Form>
       {state.records.map((item) => {
         return (
-          <Space style={{ display: 'flex', marginBottom: 8 }} align="baseline">
+          <Space key={item.id} style={{ display: 'flex', marginBottom: 8 }} align="baseline">
             <Form.Item label="名称">
               <Paragraph copyable>{item.name}</Paragraph>
             </Form.Item>
