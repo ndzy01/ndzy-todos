@@ -53,9 +53,7 @@ const Record = () => {
             <Form.Item label="内容">
               <Paragraph copyable>{item.txt}</Paragraph>
             </Form.Item>
-            <Form.Item label="描述">
-              <Paragraph copyable>{item.txtInfo}</Paragraph>
-            </Form.Item>
+            <Form.Item label="描述">{item.txtInfo || '--'}</Form.Item>
             {state.user?.role === '0' && (
               <Popconfirm title="删除将无法恢复,确定删除?" onConfirm={() => delRecord(item.id)}>
                 <MinusCircleOutlined />
