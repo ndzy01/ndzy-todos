@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { Button, Space, Input, Form, Typography } from 'antd';
+import { Button, Space, Input, Form, Typography, Popconfirm } from 'antd';
 import { MinusCircleOutlined } from '@ant-design/icons';
 import { ReduxContext } from '../redux';
 import { useTodo } from '../hooks';
@@ -56,7 +56,11 @@ const Record = () => {
             <Form.Item label="描述">
               <Paragraph copyable>{item.txtInfo}</Paragraph>
             </Form.Item>
-            <MinusCircleOutlined onClick={() => delRecord(item.id)} />
+            {state.user?.role === '0' && (
+              <Popconfirm title="删除将无法恢复,确定删除?" onConfirm={() => delRecord(item.id)}>
+                <MinusCircleOutlined />
+              </Popconfirm>
+            )}
           </Space>
         );
       })}
