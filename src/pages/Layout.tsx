@@ -11,6 +11,7 @@ import Login from '../component/Login';
 import Register from '../component/Register';
 import UserList from '../component/UserList';
 import Search from '../component/Search';
+import Record from '../component/Record';
 
 const { Header, Content } = AntLayout;
 const Layout = () => {
@@ -88,6 +89,10 @@ const Layout = () => {
               游客
             </div>
           )}
+
+          <Drawer title="record" btnName="record">
+            <Record />
+          </Drawer>
 
           <Drawer title="新建" btnName="新建">
             <EditTodo />

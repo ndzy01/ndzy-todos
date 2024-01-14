@@ -285,6 +285,74 @@ export const useTodo = () => {
         dispatch({ type: 'UPDATE', payload: { loading: false } });
       });
   };
+  const getAllRecord = () => {
+    dispatch({ type: 'UPDATE', payload: { loading: true } });
+    serviceAxios
+      .get('/records')
+      .then((res) => {
+        dispatch({
+          type: 'UPDATE',
+          payload: {
+            records: res.data.map((item: any) => ({
+              ...item,
+              txt: decrypt(item.txt, item.keyBase, item.ivBase),
+            })),
+            loading: false,
+          },
+        });
+      })
+      .catch(() => {
+        dispatch({ type: 'UPDATE', payload: { loading: false } });
+      });
+  };
+  const addRecord = (values: any) => {
+    dispatch({ type: 'UPDATE', payload: { loading: true } });
+    const { text, keyBase, ivBase } = encrypt(values.txt);
+    serviceAxios
+      .post('/records', {
+        ...values,
+        txt: text,
+        keyBase,
+        ivBase,
+      })
+      .then(() => {
+        dispatch({ type: 'UPDATE', payload: { loading: false } });
+        getAllRecord();
+      })
+      .catch(() => {
+        dispatch({ type: 'UPDATE', payload: { loading: false } });
+      });
+  };
+  const updateRecord = (id: string, values: any) => {
+    dispatch({ type: 'UPDATE', payload: { loading: true } });
+    const { text, keyBase, ivBase } = encrypt(values.txt);
+    serviceAxios
+      .patch(`/records/${id}`, {
+        name: values.name,
+        txt: text,
+        keyBase,
+        ivBase,
+        txtInfo: values.txtInfo,
+      })
+      .then(() => {
+        dispatch({ type: 'UPDATE', payload: { loading: false } });
+        getAllRecord();
+      })
+      .catch(() => {
+        dispatch({ type: 'UPDATE', payload: { loading: false } });
+      });
+  };
+  const delRecord = (id: string) => {
+    dispatch({ type: 'UPDATE', payload: { loading: true } });
+    serviceAxios
+      .delete(`/records/${id}`)
+      .then(() => {
+        getAllRecord();
+      })
+      .catch(() => {
+        dispatch({ type: 'UPDATE', payload: { loading: false } });
+      });
+  };
   const switchService = () => {
     if (localStorage.getItem('USE_LOCAL_SERVICE') === '0') {
       localStorage.setItem('USE_LOCAL_SERVICE', '1');
@@ -338,5 +406,9 @@ export const useTodo = () => {
     switchData,
     switchService,
     delLocalData,
+    getAllRecord,
+    addRecord,
+    updateRecord,
+    delRecord,
   };
 };
