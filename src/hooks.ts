@@ -38,6 +38,7 @@ export const useTodo = () => {
       });
   };
   const getAllTodo = (params: { tagId?: string } = {}) => {
+    console.log('ndzy---log---ndzy', params, '------');
     dispatch({ type: 'UPDATE', payload: { loading: true } });
     service({ url: '/todos', method: 'GET' })
       // serviceAxios
