@@ -76,7 +76,7 @@ const Record = () => {
       <Table
         virtual
         columns={columns}
-        scroll={{ x: 2000, y: 600 }}
+        scroll={{ y: 600 }}
         rowKey="id"
         dataSource={state.records}
         pagination={false}

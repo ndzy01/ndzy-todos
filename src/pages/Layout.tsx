@@ -11,11 +11,10 @@ import Login from '../component/Login';
 import Register from '../component/Register';
 import UserList from '../component/UserList';
 import Search from '../component/Search';
-import Record from '../component/Record';
 
 const { Header, Content } = AntLayout;
 const Layout = () => {
-  const { signOut, getAllTodo, switchData, switchService } = useTodo();
+  const { signOut, getAllTodo, switchData, switchService, goPage } = useTodo();
   const { state } = useContext(ReduxContext);
   const items: MenuProps['items'] = [
     {
@@ -90,9 +89,13 @@ const Layout = () => {
             </div>
           )}
 
-          <Drawer title="record" btnName="record">
-            <Record />
-          </Drawer>
+          <Button type="link" onClick={() => goPage('/ndzy-todos')}>
+            home
+          </Button>
+
+          <Button type="link" onClick={() => goPage('/ndzy-todos/records')}>
+            records
+          </Button>
 
           <Drawer title="新建" btnName="新建">
             <EditTodo />

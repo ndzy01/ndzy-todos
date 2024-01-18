@@ -1,5 +1,6 @@
 import axios, { AxiosRequestHeaders } from 'axios';
-import { message as antMsg } from 'antd';
+import { message as antMsg, message } from 'antd';
+import { initCloud } from '@wxcloud/cloud-sdk';
 
 antMsg.config({
   top: 100,
@@ -121,3 +122,54 @@ serviceAxios.interceptors.response.use(
   },
 );
 export default serviceAxios;
+
+const cloud = initCloud();
+const c1 = cloud.Cloud({
+  identityless: true,
+  // 资源方 AppID
+  resourceAppid: 'wxf18966ace3bbbd97',
+  // 资源方环境 ID
+  resourceEnv: 'prod-3gjeiq7x1fbed11e',
+  // ----
+});
+c1.init();
+export const wxService = (options: {
+  url: string;
+  method: 'OPTIONS' | 'GET' | 'HEAD' | 'POST' | 'PUT' | 'DELETE' | 'TRACE' | 'CONNECT' | 'PATCH' | undefined;
+  data?: any;
+  okMsg?: string;
+}) => {
+  try {
+    const { data = {}, okMsg = '操作成功' } = options;
+    return new Promise((resolve, reject) => {
+      c1.callContainer({
+        ...options,
+        config: {
+          env: 'prod-3gjeiq7x1fbed11e',
+        },
+        path: options.url,
+        header: {
+          'X-WX-SERVICE': 'ndzy-s',
+        },
+        method: options.method,
+        data: {
+          ...data,
+        },
+      })
+        .then((res: any) => {
+          if (res.data.code === 0) {
+            message.success({ content: okMsg });
+            resolve(res.data);
+          } else {
+            message.success({ content: res.data.errorMsg });
+            reject(res.data.errorMsg);
+          }
+        })
+        .catch(() => {
+          reject('网络错误');
+        });
+    });
+  } catch (error) {
+    message.success({ content: '网络错误' });
+  }
+};
