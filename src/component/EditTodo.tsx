@@ -7,7 +7,7 @@ import { ReduxContext } from '../redux';
 import { useTodo } from '../hooks';
 
 const EditTodo = (props: any) => {
-  const { createTodo, editTodo, isLocal } = useTodo();
+  const { createTodo, editTodo } = useTodo();
   const { state } = useContext(ReduxContext);
   const onFinish = (values: any) =>
     props.id ? editTodo(values, { id: props.id }, props.onClose) : createTodo(values, props.onClose);
@@ -65,7 +65,7 @@ const EditTodo = (props: any) => {
         label="标签"
         rules={[
           {
-            required: !isLocal,
+            required: true,
             message: '请选择一个标签',
           },
         ]}

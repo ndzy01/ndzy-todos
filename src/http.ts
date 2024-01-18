@@ -1,5 +1,5 @@
 import axios, { AxiosRequestHeaders } from 'axios';
-import { message as antMsg, message } from 'antd';
+import { message as antMsg } from 'antd';
 import { initCloud } from '@wxcloud/cloud-sdk';
 
 antMsg.config({
@@ -7,13 +7,6 @@ antMsg.config({
   duration: 3,
   maxCount: 1,
 });
-if (!localStorage.getItem('DATA')) {
-  const data = { todoList: [] };
-  localStorage.setItem('DATA', JSON.stringify(data));
-}
-if (!localStorage.getItem('USE_LOCAL_DATA')) {
-  localStorage.setItem('USE_LOCAL_DATA', '0');
-}
 if (!localStorage.getItem('USE_LOCAL_SERVICE')) {
   localStorage.setItem('USE_LOCAL_SERVICE', '0');
 }
@@ -121,8 +114,6 @@ serviceAxios.interceptors.response.use(
     return Promise.reject(message);
   },
 );
-export default serviceAxios;
-
 const cloud = initCloud();
 const c1 = cloud.Cloud({
   identityless: true,
@@ -137,39 +128,44 @@ export const wxService = (options: {
   url: string;
   method: 'OPTIONS' | 'GET' | 'HEAD' | 'POST' | 'PUT' | 'DELETE' | 'TRACE' | 'CONNECT' | 'PATCH' | undefined;
   data?: any;
-  okMsg?: string;
+  params?: any;
 }) => {
-  try {
-    const { data = {}, okMsg = '操作成功' } = options;
-    return new Promise((resolve, reject) => {
-      c1.callContainer({
-        ...options,
-        config: {
-          env: 'prod-3gjeiq7x1fbed11e',
-        },
-        path: options.url,
-        header: {
-          'X-WX-SERVICE': 'ndzy-s',
-        },
-        method: options.method,
-        data: {
-          ...data,
-        },
-      })
-        .then((res: any) => {
-          if (res.data.code === 0) {
-            message.success({ content: okMsg });
-            resolve(res.data);
-          } else {
-            message.success({ content: res.data.errorMsg });
-            reject(res.data.errorMsg);
-          }
-        })
-        .catch(() => {
-          reject('网络错误');
-        });
-    });
-  } catch (error) {
-    message.success({ content: '网络错误' });
+  const { url = '', data = {} } = options;
+  const path = url;
+  const token = localStorage.getItem('token');
+  const header: any = {
+    'X-WX-SERVICE': 'ndzy-service',
+  };
+  if (token) {
+    header.Authorization = 'Basic' + ' ' + token;
   }
+  return new Promise((resolve, reject) => {
+    c1.callContainer({
+      ...options,
+      config: {
+        env: 'prod-3gjeiq7x1fbed11e',
+      },
+      path,
+      header,
+      method: options.method,
+      data,
+    })
+      .then((res: { data: any; code: number; msg: string }) => {
+        if (res.data.status === 1) {
+          antMsg.error(res.data.msg);
+        }
+        if (res.data.status === 0) {
+          antMsg.success(res.data.msg);
+        }
+        if (res.data.status === 2) {
+          localStorage.setItem('token', '');
+        }
+        resolve(res.data);
+      })
+      .catch(() => {
+        reject('网络错误');
+      });
+  });
 };
+
+export default serviceAxios;

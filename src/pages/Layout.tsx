@@ -14,7 +14,7 @@ import Search from '../component/Search';
 
 const { Header, Content } = AntLayout;
 const Layout = () => {
-  const { signOut, getAllTodo, switchData, switchService, goPage } = useTodo();
+  const { signOut, getAllTodo, switchService, goPage } = useTodo();
   const { state } = useContext(ReduxContext);
   const items: MenuProps['items'] = [
     {
@@ -62,14 +62,6 @@ const Layout = () => {
       label: (
         <Button type="link" onClick={switchService}>
           {localStorage.getItem('USE_LOCAL_SERVICE') === '0' ? '本地环境' : '线上环境'}
-        </Button>
-      ),
-    },
-    {
-      key: '6',
-      label: (
-        <Button type="link" onClick={switchData}>
-          {localStorage.getItem('USE_LOCAL_DATA') === '0' ? '本地数据' : '接口数据'}
         </Button>
       ),
     },

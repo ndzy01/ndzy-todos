@@ -10,7 +10,7 @@ import Drawer from '../component/Drawer';
 
 const Todo = () => {
   const { state } = useContext(ReduxContext);
-  const { initUser, initTags, getAllTodo, finishTodo, delTodo, recoverTodo, delLocalData, isLocal } = useTodo();
+  const { initUser, initTags, getAllTodo, finishTodo, delTodo, recoverTodo } = useTodo();
   useMount(() => {
     initUser();
     initTags();
@@ -68,21 +68,6 @@ const Todo = () => {
       render: (_text, record: any) => (
         <Space>
           <View {...record} />
-          {isLocal && (
-            <Drawer title="编辑" btnName="编辑" {...record}>
-              <EditTodo />
-            </Drawer>
-          )}
-          {isLocal && (
-            <Button type="link" onClick={() => delLocalData(record.id)}>
-              删除
-            </Button>
-          )}
-          {isLocal && (
-            <Button type="link" onClick={() => {}}>
-              同步
-            </Button>
-          )}
           {Number(record.isFinish) === 0 ? (
             <Space>
               <Drawer title="编辑" btnName="编辑" {...record}>

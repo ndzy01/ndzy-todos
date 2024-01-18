@@ -2,11 +2,11 @@ import { useNavigate } from 'react-router-dom';
 import dayjs from 'dayjs';
 import { useContext, useState } from 'react';
 import { ReduxContext } from './redux';
-import serviceAxios from './http';
-import { encrypt, decrypt, generateUUID } from './utils';
+import serviceAxios, { wxService } from './http';
+import { encrypt, decrypt } from './utils';
 
 export const useTodo = () => {
-  const isLocal = (localStorage.getItem('USE_LOCAL_DATA') || '0') === '0';
+  const service = (localStorage.getItem('USE_LOCAL_SERVICE') || '0') === '0' ? serviceAxios : wxService;
   const navigate = useNavigate();
   const { dispatch } = useContext(ReduxContext);
   const [inputValue, setInputValue] = useState('');
@@ -16,9 +16,10 @@ export const useTodo = () => {
   };
   const initUser = () => {
     dispatch({ type: 'UPDATE', payload: { loading: true } });
-    serviceAxios
-      .get('/users/loginInfo')
-      .then((res) => {
+    service({ url: '/users/loginInfo', method: 'GET' })
+      // serviceAxios
+      //   .get('/users/loginInfo')
+      .then((res: any) => {
         dispatch({ type: 'UPDATE', payload: { user: res.data[0], loading: false } });
       })
       .catch(() => {
@@ -27,8 +28,9 @@ export const useTodo = () => {
   };
   const initTags = () => {
     dispatch({ type: 'UPDATE', payload: { loading: true } });
-    serviceAxios('/tags')
-      .then((res) => {
+    service({ url: '/tags', method: 'GET' })
+      // serviceAxios('/tags')
+      .then((res: any) => {
         dispatch({ type: 'UPDATE', payload: { tags: res.data, loading: false } });
       })
       .catch(() => {
@@ -37,138 +39,104 @@ export const useTodo = () => {
   };
   const getAllTodo = (params: { tagId?: string } = {}) => {
     dispatch({ type: 'UPDATE', payload: { loading: true } });
-    if (isLocal) {
-      const localData = JSON.parse(localStorage.getItem('DATA') as any);
-      dispatch({
-        type: 'UPDATE',
-        payload: {
-          list: localData.todoList.map((item: any) => ({
-            ...item,
-            detail: decrypt(item.detail, item.keyBase, item.ivBase),
-          })),
-          loading: false,
-        },
-      });
-    } else {
-      serviceAxios
-        .get('/todos', { params: { ...params } })
-        .then((res) => {
-          dispatch({
-            type: 'UPDATE',
-            payload: {
-              list: res.data.map((item: any) => ({
-                ...item,
-                detail: decrypt(item.detail, item.keyBase, item.ivBase),
-              })),
-              loading: false,
-            },
-          });
-        })
-        .catch(() => {
-          dispatch({ type: 'UPDATE', payload: { loading: false } });
+    service({ url: '/todos', method: 'GET' })
+      // serviceAxios
+      //   .get('/todos', { params: { ...params } })
+      .then((res: any) => {
+        dispatch({
+          type: 'UPDATE',
+          payload: {
+            list: res.data.map((item: any) => ({
+              ...item,
+              detail: decrypt(item.detail, item.keyBase, item.ivBase),
+            })),
+            loading: false,
+          },
         });
-    }
+      })
+      .catch(() => {
+        dispatch({ type: 'UPDATE', payload: { loading: false } });
+      });
   };
   const createTodo = (values: any, cb?: any) => {
     dispatch({ type: 'UPDATE', payload: { loading: true } });
     const { text, keyBase, ivBase } = encrypt(values.detail);
-    if (isLocal) {
-      const localData = JSON.parse(localStorage.getItem('DATA') as any);
-      localData.todoList.push({
-        id: generateUUID(),
+    service({
+      url: '/todos',
+      method: 'POST',
+      data: {
         ...values,
         deadline: dayjs(values.deadline).format('YYYY-MM-DD'),
         operationSource: 'h5',
         detail: text,
         keyBase,
         ivBase,
-        isLocal: true,
+      },
+    })
+      // serviceAxios
+      //   .post('/todos', {
+      //     ...values,
+      //     deadline: dayjs(values.deadline).format('YYYY-MM-DD'),
+      //     operationSource: 'h5',
+      //     detail: text,
+      //     keyBase,
+      //     ivBase,
+      //   })
+      .then(() => {
+        dispatch({ type: 'UPDATE', payload: { loading: false } });
+        getAllTodo();
+        cb && cb();
+      })
+      .catch(() => {
+        dispatch({ type: 'UPDATE', payload: { loading: false } });
       });
-      localStorage.setItem('DATA', JSON.stringify(localData));
-      dispatch({
-        type: 'UPDATE',
-        payload: {
-          list: localData.todoList,
-          loading: false,
-        },
-      });
-      getAllTodo();
-      cb && cb();
-    } else {
-      serviceAxios
-        .post('/todos', {
-          ...values,
-          deadline: dayjs(values.deadline).format('YYYY-MM-DD'),
-          operationSource: 'h5',
-          detail: text,
-          keyBase,
-          ivBase,
-        })
-        .then(() => {
-          dispatch({ type: 'UPDATE', payload: { loading: false } });
-          getAllTodo();
-          cb && cb();
-        })
-        .catch(() => {
-          dispatch({ type: 'UPDATE', payload: { loading: false } });
-        });
-    }
   };
   const editTodo = (values: any, state: { id: string }, cb?: any) => {
     dispatch({ type: 'UPDATE', payload: { loading: true } });
     const { text, keyBase, ivBase } = encrypt(values.detail);
-    if (isLocal) {
-      const localData = JSON.parse(localStorage.getItem('DATA') as any);
-      localData.todoList = localData.todoList.map((item: any) => {
-        if (item.id === state.id) {
-          return {
-            ...item,
-            name: values.name,
-            detail: text,
-            keyBase,
-            ivBase,
-            deadline: dayjs(values.deadline).format('YYYY-MM-DD'),
-            tagId: values.tagId,
-          };
-        }
-        return item;
+    service({
+      url: `/todos/${state.id}`,
+      method: 'PATCH',
+      data: {
+        name: values.name,
+        detail: text,
+        keyBase,
+        ivBase,
+        deadline: dayjs(values.deadline).format('YYYY-MM-DD'),
+        tagId: values.tagId,
+      },
+    })
+      // serviceAxios
+      //   .patch(`/todos/${state.id}`, {
+      //     name: values.name,
+      //     detail: text,
+      //     keyBase,
+      //     ivBase,
+      //     deadline: dayjs(values.deadline).format('YYYY-MM-DD'),
+      //     tagId: values.tagId,
+      //   })
+      .then(() => {
+        dispatch({ type: 'UPDATE', payload: { loading: false } });
+        getAllTodo();
+        cb && cb();
+      })
+      .catch(() => {
+        dispatch({ type: 'UPDATE', payload: { loading: false } });
       });
-      localStorage.setItem('DATA', JSON.stringify(localData));
-      dispatch({
-        type: 'UPDATE',
-        payload: {
-          list: localData.todoList,
-          loading: false,
-        },
-      });
-      getAllTodo();
-      cb && cb();
-    } else {
-      serviceAxios
-        .patch(`/todos/${state.id}`, {
-          name: values.name,
-          detail: text,
-          keyBase,
-          ivBase,
-          deadline: dayjs(values.deadline).format('YYYY-MM-DD'),
-          tagId: values.tagId,
-        })
-        .then(() => {
-          dispatch({ type: 'UPDATE', payload: { loading: false } });
-          getAllTodo();
-          cb && cb();
-        })
-        .catch(() => {
-          dispatch({ type: 'UPDATE', payload: { loading: false } });
-        });
-    }
   };
   const finishTodo = (item: ITodo) => {
     dispatch({ type: 'UPDATE', payload: { loading: true } });
-    serviceAxios
-      .patch(`/todos/${item.id}`, {
+    service({
+      url: `/todos/${item.id}`,
+      method: 'PATCH',
+      data: {
         isFinish: true,
-      })
+      },
+    })
+      // serviceAxios
+      //   .patch(`/todos/${item.id}`, {
+      //     isFinish: true,
+      //   })
       .then(() => {
         getAllTodo();
       })
@@ -178,8 +146,15 @@ export const useTodo = () => {
   };
   const delTodo = (item: ITodo) => {
     dispatch({ type: 'UPDATE', payload: { loading: true } });
-    serviceAxios
-      .delete(`/todos/${item.id}`)
+    service({
+      url: `/todos/${item.id}`,
+      method: 'DELETE',
+      data: {
+        isFinish: true,
+      },
+    })
+      // serviceAxios
+      //   .delete(`/todos/${item.id}`)
       .then(() => {
         getAllTodo();
       })
@@ -189,10 +164,17 @@ export const useTodo = () => {
   };
   const recoverTodo = (item: ITodo) => {
     dispatch({ type: 'UPDATE', payload: { loading: true } });
-    serviceAxios
-      .patch(`/todos/${item.id}`, {
+    service({
+      url: `/todos/${item.id}`,
+      method: 'PATCH',
+      data: {
         isFinish: false,
-      })
+      },
+    })
+      // serviceAxios
+      //   .patch(`/todos/${item.id}`, {
+      //     isFinish: false,
+      //   })
       .then(() => {
         getAllTodo();
       })
@@ -207,9 +189,14 @@ export const useTodo = () => {
   };
   const login = (values: { mobile: string; password: string }) => {
     dispatch({ type: 'UPDATE', payload: { loading: true } });
-    serviceAxios
-      .post('/users/login', { ...values })
-      .then((res) => {
+    service({
+      url: '/users/login',
+      method: 'POST',
+      data: values,
+    })
+      // serviceAxios
+      //   .post('/users/login', { ...values })
+      .then((res: any) => {
         dispatch({ type: 'UPDATE', payload: { loading: false } });
         if (res && res.data && res.data.token) {
           localStorage.setItem('token', res.data.token);
@@ -223,9 +210,14 @@ export const useTodo = () => {
   };
   const register = (values: { nickname: string; mobile: string; password: string }, cb?: any) => {
     dispatch({ type: 'UPDATE', payload: { loading: true } });
-    serviceAxios
-      .post('/users/register', { ...values })
-      .then((res) => {
+    service({
+      url: '/users/register',
+      method: 'POST',
+      data: values,
+    })
+      // serviceAxios
+      // .post('/users/register', { ...values })
+      .then((res: any) => {
         dispatch({ type: 'UPDATE', payload: { loading: false } });
         if (res.status === 0) {
           cb && cb();
@@ -237,8 +229,12 @@ export const useTodo = () => {
   };
   const delTag = (id: string) => {
     dispatch({ type: 'UPDATE', payload: { loading: true } });
-    serviceAxios
-      .delete(`/tags/${id}`)
+    service({
+      url: `/tags/${id}`,
+      method: 'DELETE',
+    })
+      // serviceAxios
+      //   .delete(`/tags/${id}`)
       .then(() => {
         initTags();
       })
@@ -251,8 +247,15 @@ export const useTodo = () => {
       return;
     }
     dispatch({ type: 'UPDATE', payload: { loading: true } });
-    serviceAxios
-      .post('/tags', { name: inputValue })
+    service({
+      url: '/tags',
+      method: 'POST',
+      data: {
+        name: inputValue,
+      },
+    })
+      // serviceAxios
+      //   .post('/tags', { name: inputValue })
       .then(() => {
         setInputValue('');
         initTags();
@@ -264,9 +267,13 @@ export const useTodo = () => {
   const getUsers = async () => {
     dispatch({ type: 'UPDATE', payload: { loading: true } });
     initUser();
-    serviceAxios
-      .get('/users')
-      .then((res) => {
+    service({
+      url: '/users',
+      method: 'GET',
+    })
+      // serviceAxios
+      //   .get('/users')
+      .then((res: any) => {
         dispatch({ type: 'UPDATE', payload: { loading: false } });
         setUsers(res.data);
       })
@@ -276,8 +283,12 @@ export const useTodo = () => {
   };
   const delUser = (item: User) => {
     dispatch({ type: 'UPDATE', payload: { loading: true } });
-    serviceAxios
-      .delete(`/users/${item.id}`)
+    service({
+      url: `/users/${item.id}`,
+      method: 'DELETE',
+    })
+      // serviceAxios
+      //   .delete(`/users/${item.id}`)
       .then(() => {
         getUsers();
       })
@@ -287,9 +298,13 @@ export const useTodo = () => {
   };
   const getAllRecord = () => {
     dispatch({ type: 'UPDATE', payload: { loading: true } });
-    serviceAxios
-      .get('/records')
-      .then((res) => {
+    service({
+      url: '/records',
+      method: 'GET',
+    })
+      // serviceAxios
+      //   .get('/records')
+      .then((res: any) => {
         dispatch({
           type: 'UPDATE',
           payload: {
@@ -308,13 +323,23 @@ export const useTodo = () => {
   const addRecord = (values: any) => {
     dispatch({ type: 'UPDATE', payload: { loading: true } });
     const { text, keyBase, ivBase } = encrypt(values.txt);
-    serviceAxios
-      .post('/records', {
+    service({
+      url: '/records',
+      method: 'POST',
+      data: {
         ...values,
         txt: text,
         keyBase,
         ivBase,
-      })
+      },
+    })
+      // serviceAxios
+      //   .post('/records', {
+      //     ...values,
+      //     txt: text,
+      //     keyBase,
+      //     ivBase,
+      //   })
       .then(() => {
         dispatch({ type: 'UPDATE', payload: { loading: false } });
         getAllRecord();
@@ -326,14 +351,25 @@ export const useTodo = () => {
   const updateRecord = (id: string, values: any) => {
     dispatch({ type: 'UPDATE', payload: { loading: true } });
     const { text, keyBase, ivBase } = encrypt(values.txt);
-    serviceAxios
-      .patch(`/records/${id}`, {
+    service({
+      url: `/records/${id}`,
+      method: 'PATCH',
+      data: {
         name: values.name,
         txt: text,
         keyBase,
         ivBase,
         txtInfo: values.txtInfo,
-      })
+      },
+    })
+      // serviceAxios
+      //   .patch(`/records/${id}`, {
+      //     name: values.name,
+      //     txt: text,
+      //     keyBase,
+      //     ivBase,
+      //     txtInfo: values.txtInfo,
+      //   })
       .then(() => {
         dispatch({ type: 'UPDATE', payload: { loading: false } });
         getAllRecord();
@@ -344,8 +380,12 @@ export const useTodo = () => {
   };
   const delRecord = (id: string) => {
     dispatch({ type: 'UPDATE', payload: { loading: true } });
-    serviceAxios
-      .delete(`/records/${id}`)
+    service({
+      url: `/records/${id}`,
+      method: 'DELETE',
+    })
+      // serviceAxios
+      //   .delete(`/records/${id}`)
       .then(() => {
         getAllRecord();
       })
@@ -360,27 +400,6 @@ export const useTodo = () => {
       localStorage.setItem('USE_LOCAL_SERVICE', '0');
     }
     window.location.reload();
-  };
-  const switchData = () => {
-    if (localStorage.getItem('USE_LOCAL_DATA') === '0') {
-      localStorage.setItem('USE_LOCAL_DATA', '1');
-    } else {
-      localStorage.setItem('USE_LOCAL_DATA', '0');
-    }
-    window.location.reload();
-  };
-  const delLocalData = (id: string) => {
-    const localData = JSON.parse(localStorage.getItem('DATA') as any);
-    localData.todoList = localData.todoList.filter((item: any) => item.id !== id);
-    localStorage.setItem('DATA', JSON.stringify(localData));
-    dispatch({
-      type: 'UPDATE',
-      payload: {
-        list: localData.todoList,
-        loading: false,
-      },
-    });
-    getAllTodo();
   };
   return {
     inputValue,
@@ -402,10 +421,7 @@ export const useTodo = () => {
     setInputValue,
     getUsers,
     delUser,
-    isLocal,
-    switchData,
     switchService,
-    delLocalData,
     getAllRecord,
     addRecord,
     updateRecord,
