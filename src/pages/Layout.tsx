@@ -20,19 +20,20 @@ const Layout = () => {
     {
       key: '0',
       label: (
-        <Drawer title="标签" btnName="标签">
-          <ITag />
+        <Drawer title="登陆" btnName="登陆">
+          <Login />
         </Drawer>
       ),
     },
     {
       key: '1',
       label: (
-        <Drawer title="登陆" btnName="登陆">
-          <Login />
+        <Drawer title="标签" btnName="标签">
+          <ITag />
         </Drawer>
       ),
     },
+
     {
       key: '2',
       label: (
@@ -65,6 +66,22 @@ const Layout = () => {
         </Button>
       ),
     },
+    {
+      key: '6',
+      label: (
+        <Button type="link" onClick={() => goPage('/ndzy-todos/records')}>
+          records
+        </Button>
+      ),
+    },
+    {
+      key: '7',
+      label: (
+        <Drawer title="搜索" btnName="搜索">
+          <Search />
+        </Drawer>
+      ),
+    },
   ];
 
   return (
@@ -85,16 +102,8 @@ const Layout = () => {
             home
           </Button>
 
-          <Button type="link" onClick={() => goPage('/ndzy-todos/records')}>
-            records
-          </Button>
-
           <Drawer title="新建" btnName="新建">
             <EditTodo />
-          </Drawer>
-
-          <Drawer title="搜索" btnName="搜索">
-            <Search />
           </Drawer>
 
           <Button type="link" onClick={() => getAllTodo()}>
