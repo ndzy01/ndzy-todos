@@ -10,7 +10,7 @@ antMsg.config({
   maxCount: 1,
 });
 if (!localStorage.getItem('USE_LOCAL_SERVICE')) {
-  localStorage.setItem('USE_LOCAL_SERVICE', '0');
+  localStorage.setItem('USE_LOCAL_SERVICE', '1');
 }
 if (!localStorage.getItem('BASE_URL')) {
   localStorage.setItem('BASE_URL', 'http://localhost:3000');
