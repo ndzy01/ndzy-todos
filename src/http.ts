@@ -3,6 +3,7 @@ import axios, { AxiosRequestHeaders } from 'axios';
 import { message as antMsg } from 'antd';
 //@ts-expect-error
 import { initCloud } from '@wxcloud/cloud-sdk';
+import { isEmpty } from 'lodash';
 
 antMsg.config({
   top: 100,
@@ -116,6 +117,12 @@ serviceAxios.interceptors.response.use(
     return Promise.reject(message);
   },
 );
+function objectToQueryString(obj: any) {
+  return Object.keys(obj)
+    .map((key) => (obj[key] ? `${encodeURIComponent(key)}=${encodeURIComponent(obj[key])}` : ''))
+    .filter((item) => item)
+    .join('&');
+}
 const cloud = initCloud();
 const c1 = cloud.Cloud({
   identityless: true,
@@ -132,14 +139,17 @@ export const wxService = (options: {
   data?: any;
   params?: any;
 }) => {
-  const { url = '', data = {} } = options;
-  const path = url;
+  const { url = '', data = {}, params = {} } = options;
+  let path = url;
   const token = localStorage.getItem('token');
   const header: any = {
     'X-WX-SERVICE': 'ndzy-service',
   };
   if (token) {
     header.Authorization = 'Basic' + ' ' + token;
+  }
+  if (options.method === 'GET' && !isEmpty(params)) {
+    path += '?' + objectToQueryString(params);
   }
   return new Promise((resolve, reject) => {
     c1.callContainer({
