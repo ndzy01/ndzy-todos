@@ -1,5 +1,7 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import axios, { AxiosRequestHeaders } from 'axios';
 import { message as antMsg } from 'antd';
+//@ts-expect-error
 import { initCloud } from '@wxcloud/cloud-sdk';
 
 antMsg.config({
