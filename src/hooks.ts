@@ -10,7 +10,6 @@ export const useTodo = () => {
   const navigate = useNavigate();
   const { dispatch } = useContext(ReduxContext);
   const [inputValue, setInputValue] = useState('');
-  const [users, setUsers] = useState<User[]>([]);
   const goPage = (path: string, options: any = {}) => {
     navigate(path, { ...options });
   };
@@ -264,38 +263,6 @@ export const useTodo = () => {
         dispatch({ type: 'UPDATE', payload: { loading: false } });
       });
   };
-  const getUsers = async () => {
-    dispatch({ type: 'UPDATE', payload: { loading: true } });
-    initUser();
-    service({
-      url: '/users',
-      method: 'GET',
-    })
-      // serviceAxios
-      //   .get('/users')
-      .then((res: any) => {
-        dispatch({ type: 'UPDATE', payload: { loading: false } });
-        setUsers(res.data);
-      })
-      .catch(() => {
-        dispatch({ type: 'UPDATE', payload: { loading: false } });
-      });
-  };
-  const delUser = (item: User) => {
-    dispatch({ type: 'UPDATE', payload: { loading: true } });
-    service({
-      url: `/users/${item.id}`,
-      method: 'DELETE',
-    })
-      // serviceAxios
-      //   .delete(`/users/${item.id}`)
-      .then(() => {
-        getUsers();
-      })
-      .catch(() => {
-        dispatch({ type: 'UPDATE', payload: { loading: false } });
-      });
-  };
   const getAllRecord = () => {
     dispatch({ type: 'UPDATE', payload: { loading: true } });
     service({
@@ -403,7 +370,6 @@ export const useTodo = () => {
   };
   return {
     inputValue,
-    users,
     initUser,
     initTags,
     createTodo,
@@ -419,8 +385,6 @@ export const useTodo = () => {
     delTag,
     handleCreateTag,
     setInputValue,
-    getUsers,
-    delUser,
     switchService,
     getAllRecord,
     addRecord,

@@ -9,7 +9,6 @@ import ITag from '../component/Tag';
 import Drawer from '../component/Drawer';
 import Login from '../component/Login';
 import Register from '../component/Register';
-import UserList from '../component/UserList';
 import Search from '../component/Search';
 
 const { Header, Content } = AntLayout;
@@ -44,14 +43,6 @@ const Layout = () => {
     },
     {
       key: '3',
-      label: state.user && state.user.role === '0' && (
-        <Drawer title="用户管理" btnName="用户管理">
-          <UserList />
-        </Drawer>
-      ),
-    },
-    {
-      key: '4',
       label: (
         <Button type="link" onClick={signOut}>
           登出
@@ -59,7 +50,7 @@ const Layout = () => {
       ),
     },
     {
-      key: '5',
+      key: '4',
       label: (
         <Button type="link" onClick={switchService}>
           {localStorage.getItem('USE_LOCAL_SERVICE') === '0' ? '本地环境' : '线上环境'}
@@ -67,7 +58,7 @@ const Layout = () => {
       ),
     },
     {
-      key: '6',
+      key: '5',
       label: (
         <Button type="link" onClick={() => goPage('/ndzy-todos/records')}>
           records
@@ -75,7 +66,7 @@ const Layout = () => {
       ),
     },
     {
-      key: '7',
+      key: '6',
       label: (
         <Drawer title="搜索" btnName="搜索">
           <Search />
