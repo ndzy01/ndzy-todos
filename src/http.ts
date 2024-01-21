@@ -117,12 +117,12 @@ serviceAxios.interceptors.response.use(
     return Promise.reject(message);
   },
 );
-function objectToQueryString(obj: any) {
+export const objectToQueryString = (obj: any) => {
   return Object.keys(obj)
     .map((key) => (obj[key] ? `${encodeURIComponent(key)}=${encodeURIComponent(obj[key])}` : ''))
     .filter((item) => item)
     .join('&');
-}
+};
 const cloud = initCloud();
 const c1 = cloud.Cloud({
   identityless: true,

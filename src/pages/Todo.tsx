@@ -23,48 +23,9 @@ const Todo = () => {
       width: 80,
     },
     {
-      title: '进度',
-      dataIndex: 'deadline',
-      width: 80,
-      render: (_text, record: any) => {
-        if (Number(record.isFinish) === 0) {
-          return <span style={{ color: 'red' }}>处理中</span>;
-        }
-
-        if (Number(record.isFinish) === 1) {
-          return <span style={{ color: 'green' }}>已完成</span>;
-        }
-      },
-    },
-    {
-      title: '截止日期',
-      dataIndex: 'deadline',
-      width: 80,
-    },
-    {
-      title: '标签',
-      dataIndex: 'tagName',
-      width: 80,
-    },
-    {
-      title: '用户',
-      dataIndex: 'userName',
-      width: 80,
-    },
-    {
-      title: '创建时间',
-      dataIndex: 'createdAt',
-      width: 120,
-    },
-    {
-      title: '更新时间',
-      dataIndex: 'updatedAt',
-      width: 120,
-    },
-    {
       title: '操作',
-      width: 100,
-      fixed: 'right',
+      width: 120,
+      // fixed: 'right',
       render: (_text, record: any) => (
         <Space>
           <View {...record} />
@@ -90,6 +51,45 @@ const Todo = () => {
         </Space>
       ),
     },
+    {
+      title: '进度',
+      dataIndex: 'deadline',
+      width: 100,
+      render: (_text, record: any) => {
+        if (Number(record.isFinish) === 0) {
+          return <span style={{ color: 'red' }}>处理中</span>;
+        }
+
+        if (Number(record.isFinish) === 1) {
+          return <span style={{ color: 'green' }}>已完成</span>;
+        }
+      },
+    },
+    {
+      title: '截止日期',
+      dataIndex: 'deadline',
+      width: 100,
+    },
+    {
+      title: '标签',
+      dataIndex: 'tagName',
+      width: 100,
+    },
+    {
+      title: '用户',
+      dataIndex: 'userName',
+      width: 100,
+    },
+    {
+      title: '创建时间',
+      dataIndex: 'createdAt',
+      width: 100,
+    },
+    {
+      title: '更新时间',
+      dataIndex: 'updatedAt',
+      width: 100,
+    },
   ];
 
   return (
@@ -98,7 +98,7 @@ const Todo = () => {
       <Table
         virtual
         columns={columns}
-        scroll={{ x: 2000, y: 600 }}
+        scroll={{ x: 900, y: 600 }}
         rowKey="id"
         dataSource={state.list}
         pagination={false}
