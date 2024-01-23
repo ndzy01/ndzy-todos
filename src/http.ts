@@ -1,7 +1,5 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
 import axios, { AxiosRequestHeaders } from 'axios';
 import { message as antMsg } from 'antd';
-//@ts-expect-error
 import { initCloud } from '@wxcloud/cloud-sdk';
 import { isEmpty } from 'lodash';
 
@@ -10,6 +8,16 @@ antMsg.config({
   duration: 3,
   maxCount: 1,
 });
+const cloud = initCloud();
+const c = cloud.Cloud({
+  identityless: true,
+  // 资源方 AppID
+  resourceAppid: 'wxf18966ace3bbbd97',
+  // 资源方环境 ID
+  resourceEnv: 'prod-3gjeiq7x1fbed11e',
+  // ----
+});
+c.init();
 if (!localStorage.getItem('USE_LOCAL_SERVICE')) {
   localStorage.setItem('USE_LOCAL_SERVICE', '1');
 }
@@ -123,16 +131,6 @@ export const objectToQueryString = (obj: any) => {
     .filter((item) => item)
     .join('&');
 };
-const cloud = initCloud();
-const c1 = cloud.Cloud({
-  identityless: true,
-  // 资源方 AppID
-  resourceAppid: 'wxf18966ace3bbbd97',
-  // 资源方环境 ID
-  resourceEnv: 'prod-3gjeiq7x1fbed11e',
-  // ----
-});
-c1.init();
 export const wxService = (options: {
   url: string;
   method: 'OPTIONS' | 'GET' | 'HEAD' | 'POST' | 'PUT' | 'DELETE' | 'TRACE' | 'CONNECT' | 'PATCH' | undefined;
@@ -152,7 +150,7 @@ export const wxService = (options: {
     path += '?' + objectToQueryString(params);
   }
   return new Promise((resolve, reject) => {
-    c1.callContainer({
+    c.callContainer({
       ...options,
       config: {
         env: 'prod-3gjeiq7x1fbed11e',
@@ -179,5 +177,4 @@ export const wxService = (options: {
       });
   });
 };
-
 export default serviceAxios;

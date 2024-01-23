@@ -14,10 +14,6 @@ body {
   padding: 0 8px !important;
 }
 
-.ndzy-menu {
-  width: 100% !important;
-}
-
 .between {
   display: flex;
   justify-content: space-between;
@@ -42,8 +38,4 @@ body {
 
 .p-16 {
   padding: 16px;
-}
-
-.todo-item:hover {
-  background-color: skyblue;
 }

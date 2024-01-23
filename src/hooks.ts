@@ -16,8 +16,6 @@ export const useTodo = () => {
   const initUser = () => {
     dispatch({ type: 'UPDATE', payload: { loading: true } });
     service({ url: '/users/loginInfo', method: 'GET' })
-      // serviceAxios
-      //   .get('/users/loginInfo')
       .then((res: any) => {
         dispatch({ type: 'UPDATE', payload: { user: res.data[0], loading: false } });
       })
@@ -28,7 +26,6 @@ export const useTodo = () => {
   const initTags = () => {
     dispatch({ type: 'UPDATE', payload: { loading: true } });
     service({ url: '/tags', method: 'GET' })
-      // serviceAxios('/tags')
       .then((res: any) => {
         dispatch({ type: 'UPDATE', payload: { tags: res.data, loading: false } });
       })
@@ -39,8 +36,6 @@ export const useTodo = () => {
   const getAllTodo = (params: { tagId?: string } = {}) => {
     dispatch({ type: 'UPDATE', payload: { loading: true } });
     service({ url: '/todos', method: 'GET', params })
-      // serviceAxios
-      //   .get('/todos', { params: { ...params } })
       .then((res: any) => {
         dispatch({
           type: 'UPDATE',
@@ -72,15 +67,6 @@ export const useTodo = () => {
         ivBase,
       },
     })
-      // serviceAxios
-      //   .post('/todos', {
-      //     ...values,
-      //     deadline: dayjs(values.deadline).format('YYYY-MM-DD'),
-      //     operationSource: 'h5',
-      //     detail: text,
-      //     keyBase,
-      //     ivBase,
-      //   })
       .then(() => {
         dispatch({ type: 'UPDATE', payload: { loading: false } });
         getAllTodo();
@@ -105,15 +91,6 @@ export const useTodo = () => {
         tagId: values.tagId,
       },
     })
-      // serviceAxios
-      //   .patch(`/todos/${state.id}`, {
-      //     name: values.name,
-      //     detail: text,
-      //     keyBase,
-      //     ivBase,
-      //     deadline: dayjs(values.deadline).format('YYYY-MM-DD'),
-      //     tagId: values.tagId,
-      //   })
       .then(() => {
         dispatch({ type: 'UPDATE', payload: { loading: false } });
         getAllTodo();
@@ -132,10 +109,6 @@ export const useTodo = () => {
         isFinish: true,
       },
     })
-      // serviceAxios
-      //   .patch(`/todos/${item.id}`, {
-      //     isFinish: true,
-      //   })
       .then(() => {
         getAllTodo();
       })
@@ -152,8 +125,6 @@ export const useTodo = () => {
         isFinish: true,
       },
     })
-      // serviceAxios
-      //   .delete(`/todos/${item.id}`)
       .then(() => {
         getAllTodo();
       })
@@ -170,10 +141,6 @@ export const useTodo = () => {
         isFinish: false,
       },
     })
-      // serviceAxios
-      //   .patch(`/todos/${item.id}`, {
-      //     isFinish: false,
-      //   })
       .then(() => {
         getAllTodo();
       })
@@ -193,8 +160,6 @@ export const useTodo = () => {
       method: 'POST',
       data: values,
     })
-      // serviceAxios
-      //   .post('/users/login', { ...values })
       .then((res: any) => {
         dispatch({ type: 'UPDATE', payload: { loading: false } });
         if (res && res.data && res.data.token) {
@@ -214,8 +179,6 @@ export const useTodo = () => {
       method: 'POST',
       data: values,
     })
-      // serviceAxios
-      // .post('/users/register', { ...values })
       .then((res: any) => {
         dispatch({ type: 'UPDATE', payload: { loading: false } });
         if (res.status === 0) {
@@ -232,8 +195,6 @@ export const useTodo = () => {
       url: `/tags/${id}`,
       method: 'DELETE',
     })
-      // serviceAxios
-      //   .delete(`/tags/${id}`)
       .then(() => {
         initTags();
       })
@@ -253,8 +214,6 @@ export const useTodo = () => {
         name: inputValue,
       },
     })
-      // serviceAxios
-      //   .post('/tags', { name: inputValue })
       .then(() => {
         setInputValue('');
         initTags();
@@ -269,8 +228,6 @@ export const useTodo = () => {
       url: '/records',
       method: 'GET',
     })
-      // serviceAxios
-      //   .get('/records')
       .then((res: any) => {
         dispatch({
           type: 'UPDATE',
@@ -300,13 +257,6 @@ export const useTodo = () => {
         ivBase,
       },
     })
-      // serviceAxios
-      //   .post('/records', {
-      //     ...values,
-      //     txt: text,
-      //     keyBase,
-      //     ivBase,
-      //   })
       .then(() => {
         dispatch({ type: 'UPDATE', payload: { loading: false } });
         getAllRecord();
@@ -329,14 +279,6 @@ export const useTodo = () => {
         txtInfo: values.txtInfo,
       },
     })
-      // serviceAxios
-      //   .patch(`/records/${id}`, {
-      //     name: values.name,
-      //     txt: text,
-      //     keyBase,
-      //     ivBase,
-      //     txtInfo: values.txtInfo,
-      //   })
       .then(() => {
         dispatch({ type: 'UPDATE', payload: { loading: false } });
         getAllRecord();
@@ -351,8 +293,6 @@ export const useTodo = () => {
       url: `/records/${id}`,
       method: 'DELETE',
     })
-      // serviceAxios
-      //   .delete(`/records/${id}`)
       .then(() => {
         getAllRecord();
       })

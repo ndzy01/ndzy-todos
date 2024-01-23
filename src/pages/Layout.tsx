@@ -9,11 +9,10 @@ import ITag from '../component/Tag';
 import Drawer from '../component/Drawer';
 import Login from '../component/Login';
 import Register from '../component/Register';
-import Search from '../component/Search';
 
 const { Header, Content } = AntLayout;
 const Layout = () => {
-  const { signOut, getAllTodo, switchService, goPage } = useTodo();
+  const { signOut, switchService, goPage } = useTodo();
   const { state } = useContext(ReduxContext);
   const items: MenuProps['items'] = [
     {
@@ -27,22 +26,13 @@ const Layout = () => {
     {
       key: '1',
       label: (
-        <Drawer title="标签" btnName="标签">
-          <ITag />
-        </Drawer>
-      ),
-    },
-
-    {
-      key: '2',
-      label: (
         <Drawer title="注册" btnName="注册">
           <Register />
         </Drawer>
       ),
     },
     {
-      key: '3',
+      key: '2',
       label: (
         <Button type="link" onClick={signOut}>
           登出
@@ -50,7 +40,7 @@ const Layout = () => {
       ),
     },
     {
-      key: '4',
+      key: '3',
       label: (
         <Button type="link" onClick={switchService}>
           {localStorage.getItem('USE_LOCAL_SERVICE') === '0' ? '本地环境' : '线上环境'}
@@ -58,19 +48,11 @@ const Layout = () => {
       ),
     },
     {
-      key: '5',
+      key: '4',
       label: (
         <Button type="link" onClick={() => goPage('/ndzy-todos/records')}>
           records
         </Button>
-      ),
-    },
-    {
-      key: '6',
-      label: (
-        <Drawer title="搜索" btnName="搜索">
-          <Search />
-        </Drawer>
       ),
     },
   ];
@@ -93,13 +75,13 @@ const Layout = () => {
             home
           </Button>
 
+          <Drawer title="标签" btnName="标签">
+            <ITag />
+          </Drawer>
+
           <Drawer title="新建" btnName="新建">
             <EditTodo />
           </Drawer>
-
-          <Button type="link" onClick={() => getAllTodo()}>
-            重置
-          </Button>
 
           <Dropdown menu={{ items }}>
             <a onClick={(e) => e.preventDefault()}>其他</a>

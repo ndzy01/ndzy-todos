@@ -35,3 +35,7 @@ interface User {
   createdAt: string;
   updatedAt: string;
 }
+
+declare module '@wxcloud/cloud-sdk' {
+  export { initCloud };
+}
