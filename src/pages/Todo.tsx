@@ -11,15 +11,18 @@ import Drawer from '../component/Drawer';
 import Search from '../component/Search';
 
 const Todo = () => {
+  const ContainerHeight = 400;
   const ref = useRef(null);
   const size = useSize(ref);
   const { state } = useContext(ReduxContext);
   const { initUser, initTags, getAllTodo, finishTodo, delTodo, recoverTodo } = useTodo();
+
   useMount(() => {
     initUser();
     initTags();
     getAllTodo();
   });
+
   const columns: TableProps<any>['columns'] = [
     {
       title: '名称',
@@ -73,11 +76,13 @@ const Todo = () => {
       render: (_text, record: any) => (
         <Space>
           <View {...record} />
+
           {Number(record.isFinish) === 0 ? (
             <Space>
               <Drawer title="编辑" btnName="编辑" {...record}>
                 <EditTodo />
               </Drawer>
+
               <Button type="link" onClick={() => finishTodo(record)}>
                 完成
               </Button>
@@ -87,6 +92,7 @@ const Todo = () => {
               <Button type="link" onClick={() => recoverTodo(record)}>
                 恢复
               </Button>
+
               <Popconfirm title="删除将无法恢复,确定删除?" onConfirm={() => delTodo(record)}>
                 <Button type="link"> 删除</Button>
               </Popconfirm>
@@ -96,12 +102,13 @@ const Todo = () => {
       ),
     },
   ];
-  const ContainerHeight = 400;
 
   return (
     <div ref={ref}>
       <div className="center">{state.loading && <Spin />}</div>
+
       <Search />
+
       {Number(size?.width) > 800 ? (
         <Table
           virtual
@@ -120,11 +127,13 @@ const Todo = () => {
                 key={item.id}
                 actions={[
                   <View {...item} />,
+
                   ...(Number(item.isFinish) === 0
                     ? [
                         <Drawer title="编辑" btnName="编辑" {...item}>
                           <EditTodo />
                         </Drawer>,
+
                         <Button type="link" onClick={() => finishTodo(item)}>
                           完成
                         </Button>,
@@ -133,6 +142,7 @@ const Todo = () => {
                         <Button type="link" onClick={() => recoverTodo(item)}>
                           恢复
                         </Button>,
+
                         <Popconfirm title="删除将无法恢复,确定删除?" onConfirm={() => delTodo(item)}>
                           <Button type="link"> 删除</Button>
                         </Popconfirm>,
@@ -141,7 +151,9 @@ const Todo = () => {
                 ]}
               >
                 <List.Item.Meta title={item.name} description={item.deadline} />
+
                 <div>{Number(item.isFinish) === 0 && <span style={{ color: 'red' }}>处理中</span>}</div>
+
                 <div>{Number(item.isFinish) === 1 && <span style={{ color: 'green' }}>已完成</span>}</div>
               </List.Item>
             )}
@@ -151,4 +163,5 @@ const Todo = () => {
     </div>
   );
 };
+
 export default Todo;

@@ -51,7 +51,7 @@ const Layout = () => {
       key: '4',
       label: (
         <Button type="link" onClick={() => goPage('/ndzy-todos/records')}>
-          records
+          记录
         </Button>
       ),
     },
@@ -96,4 +96,5 @@ const Layout = () => {
     </AntLayout>
   );
 };
+
 export default Layout;

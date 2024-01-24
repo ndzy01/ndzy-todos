@@ -7,20 +7,24 @@ interface State {
   tags: TodoTag[];
   records: any[];
 }
+
 interface Action {
   type: string;
   payload?: Partial<State>;
 }
+
 interface ContextProps {
   state: State;
   dispatch: (action: Action) => void;
 }
+
 export const initialState: State = {
   loading: false,
   list: [],
   tags: [],
   records: [],
 };
+
 export const reducer = (state: State, action: Action): State => {
   switch (action.type) {
     case 'UPDATE':
@@ -30,4 +34,5 @@ export const reducer = (state: State, action: Action): State => {
       return state;
   }
 };
+
 export const ReduxContext = createContext<ContextProps>({ state: initialState, dispatch: () => {} });

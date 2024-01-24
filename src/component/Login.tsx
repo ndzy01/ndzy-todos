@@ -7,6 +7,7 @@ import { formItemLayout, buttonItemLayout } from '../utils';
 const Login = () => {
   const { login } = useTodo();
   const { state } = useContext(ReduxContext);
+
   return (
     <Form {...formItemLayout} name="login" onFinish={login} scrollToFirstError>
       <Form.Item name="mobile" label="手机号" rules={[{ required: true, message: '请输入你的手机号!' }]}>
@@ -33,4 +34,5 @@ const Login = () => {
     </Form>
   );
 };
+
 export default Login;

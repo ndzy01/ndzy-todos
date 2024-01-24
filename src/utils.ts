@@ -2,41 +2,54 @@ import type { RangePickerProps } from 'antd/es/date-picker';
 import dayjs from 'dayjs';
 import CryptoJS from 'crypto-js';
 
-export const range = (start: number, end: number) => {
-  const result: number[] = [];
-  for (let i = start; i < end; i++) {
-    result.push(i);
-  }
-  return result;
-};
+/**
+ *
+ * @description 判断日期是否为当日之前
+ */
 export const disabledDate: RangePickerProps['disabledDate'] = (current: any) => {
   return current && current < dayjs().endOf('day');
 };
-export const disabledDateTime = () => ({
-  disabledHours: () => range(0, 24).splice(4, 20),
-  disabledMinutes: () => range(30, 60),
-  disabledSeconds: () => [55, 56],
-});
+
+/**
+ *
+ * @description 生成 uuid
+ */
 export const generateUUID = (): string => {
   let d = new Date().getTime();
+
   if (typeof performance !== 'undefined' && typeof performance.now === 'function') {
     d += performance.now();
   }
+
   const uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
     const r = (d + Math.random() * 16) % 16 | 0;
+
     d = Math.floor(d / 16);
+
     return (c == 'x' ? r : (r & 0x3) | 0x8).toString(16);
   });
+
   return uuid;
 };
+
+/**
+ *
+ * @description 随机产生 256 字符长度的字符串
+ */
 const getKey = () => {
   let key = '';
+
   for (let index = 0; index < 8; index++) {
     key += generateUUID().replace(/-/g, '');
   }
+
   return key;
 };
-// 解密
+
+/**
+ *
+ * @description 解密
+ */
 export const decrypt = (text: string, keyBase: string, ivBase: string) => {
   const key = CryptoJS.enc.Utf8.parse(keyBase);
   const iv = CryptoJS.enc.Utf8.parse(ivBase);
@@ -49,9 +62,14 @@ export const decrypt = (text: string, keyBase: string, ivBase: string) => {
     hasher: CryptoJS.algo.SHA256,
   });
   const decryptedStr = decrypt.toString(CryptoJS.enc.Utf8);
+
   return decryptedStr.toString();
 };
-// 加密
+
+/**
+ *
+ * @description 加密
+ */
 export const encrypt = (text: string) => {
   const keyBase = getKey();
   const ivBase = getKey();
@@ -64,12 +82,14 @@ export const encrypt = (text: string) => {
     padding: CryptoJS.pad.Pkcs7,
     hasher: CryptoJS.algo.SHA256,
   });
+
   return {
     keyBase,
     ivBase,
     text: encrypted.ciphertext.toString().toUpperCase(),
   };
 };
+
 export const formItemLayout = {
   labelCol: {
     xs: { span: 6 },
@@ -80,4 +100,5 @@ export const formItemLayout = {
     sm: { span: 18 },
   },
 };
+
 export const buttonItemLayout = { wrapperCol: { span: 14, offset: 2 } };

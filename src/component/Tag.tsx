@@ -15,6 +15,7 @@ const ITag = () => {
     itemHeight: 60,
     overscan: 10,
   });
+
   return (
     <div>
       <Space.Compact className="w-100">
@@ -23,6 +24,7 @@ const ITag = () => {
           添加
         </Button>
       </Space.Compact>
+
       <div ref={containerRef} style={{ height: window.innerHeight / 2, overflow: 'auto', marginTop: 16 }}>
         <div ref={wrapperRef}>
           {list.map((ele) => (
@@ -59,4 +61,5 @@ const ITag = () => {
     </div>
   );
 };
+
 export default ITag;

@@ -7,6 +7,7 @@ import { formItemLayout, buttonItemLayout } from '../utils';
 const Register = ({ onClose }: any) => {
   const { register } = useTodo();
   const { state } = useContext(ReduxContext);
+
   return (
     <Form {...formItemLayout} name="register" onFinish={(values: any) => register(values, onClose)} scrollToFirstError>
       <Form.Item
@@ -62,4 +63,5 @@ const Register = ({ onClose }: any) => {
     </Form>
   );
 };
+
 export default Register;

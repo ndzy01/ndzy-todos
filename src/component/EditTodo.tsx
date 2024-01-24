@@ -11,6 +11,7 @@ const EditTodo = (props: any) => {
   const { state } = useContext(ReduxContext);
   const onFinish = (values: any) =>
     props.id ? editTodo(values, { id: props.id }, props.onClose) : createTodo(values, props.onClose);
+
   return (
     <Form
       initialValues={{

@@ -11,17 +11,21 @@ const Record = () => {
   const [form] = Form.useForm();
   const { getAllRecord, addRecord, delRecord } = useTodo();
   const { state } = useContext(ReduxContext);
+
   useDeepCompareEffect(() => {
     getAllRecord();
   }, []);
+
   useDeepCompareEffect(() => {
     form.setFieldsValue({ name: '', txt: '', txtInfo: '' });
   }, [state.records]);
+
   const onFinish = (values: any) => {
     if (values) {
       addRecord(values);
     }
   };
+
   const columns: TableProps<any>['columns'] = [
     {
       title: '名称',
@@ -60,9 +64,11 @@ const Record = () => {
         <Form.Item label="name" name="name" rules={[{ required: true, message: '不能为空' }]}>
           <Input placeholder="请输入" />
         </Form.Item>
+
         <Form.Item label="txt" name="txt" rules={[{ required: true, message: '不能为空' }]}>
           <Input placeholder="请输入" />
         </Form.Item>
+
         <Form.Item label="txtInfo" name="txtInfo">
           <Input placeholder="请输入" />
         </Form.Item>
@@ -85,4 +91,5 @@ const Record = () => {
     </div>
   );
 };
+
 export default Record;

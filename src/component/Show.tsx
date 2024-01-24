@@ -3,6 +3,7 @@ import Preview from './Preview';
 
 const Show = (props: any) => {
   const [state, setState] = useSetState({ show: true });
+
   return (
     <div className="w-100">
       <div className="w-100">
@@ -13,4 +14,5 @@ const Show = (props: any) => {
     </div>
   );
 };
+
 export default Show;

@@ -2,6 +2,7 @@ import { generateUUID } from '../utils';
 
 const Preview = ({ value }: { value: string }) => {
   const id = generateUUID();
+
   return (
     <div
       style={{ padding: '0 8px' }}
@@ -11,4 +12,5 @@ const Preview = ({ value }: { value: string }) => {
     />
   );
 };
+
 export default Preview;

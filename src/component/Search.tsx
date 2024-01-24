@@ -9,6 +9,7 @@ const Search = ({ onClose }: any) => {
   const [expand, setExpand] = useState(false);
   const { getAllTodo } = useTodo();
   const { state } = useContext(ReduxContext);
+
   return (
     <Form
       initialValues={{
@@ -66,6 +67,7 @@ const Search = ({ onClose }: any) => {
           <Button type="link" onClick={() => getAllTodo()}>
             重置
           </Button>
+          
           <a
             style={{ fontSize: 12 }}
             onClick={() => {

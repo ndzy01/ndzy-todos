@@ -10,9 +10,11 @@ export const useTodo = () => {
   const navigate = useNavigate();
   const { dispatch } = useContext(ReduxContext);
   const [inputValue, setInputValue] = useState('');
+
   const goPage = (path: string, options: any = {}) => {
     navigate(path, { ...options });
   };
+
   const initUser = () => {
     dispatch({ type: 'UPDATE', payload: { loading: true } });
     service({ url: '/users/loginInfo', method: 'GET' })
@@ -23,6 +25,7 @@ export const useTodo = () => {
         dispatch({ type: 'UPDATE', payload: { loading: false } });
       });
   };
+
   const initTags = () => {
     dispatch({ type: 'UPDATE', payload: { loading: true } });
     service({ url: '/tags', method: 'GET' })
@@ -33,6 +36,7 @@ export const useTodo = () => {
         dispatch({ type: 'UPDATE', payload: { loading: false } });
       });
   };
+
   const getAllTodo = (params: { tagId?: string } = {}) => {
     dispatch({ type: 'UPDATE', payload: { loading: true } });
     service({ url: '/todos', method: 'GET', params })
@@ -52,6 +56,7 @@ export const useTodo = () => {
         dispatch({ type: 'UPDATE', payload: { loading: false } });
       });
   };
+
   const createTodo = (values: any, cb?: any) => {
     dispatch({ type: 'UPDATE', payload: { loading: true } });
     const { text, keyBase, ivBase } = encrypt(values.detail);
@@ -76,6 +81,7 @@ export const useTodo = () => {
         dispatch({ type: 'UPDATE', payload: { loading: false } });
       });
   };
+
   const editTodo = (values: any, state: { id: string }, cb?: any) => {
     dispatch({ type: 'UPDATE', payload: { loading: true } });
     const { text, keyBase, ivBase } = encrypt(values.detail);
@@ -100,6 +106,7 @@ export const useTodo = () => {
         dispatch({ type: 'UPDATE', payload: { loading: false } });
       });
   };
+
   const finishTodo = (item: ITodo) => {
     dispatch({ type: 'UPDATE', payload: { loading: true } });
     service({
@@ -116,6 +123,7 @@ export const useTodo = () => {
         dispatch({ type: 'UPDATE', payload: { loading: false } });
       });
   };
+
   const delTodo = (item: ITodo) => {
     dispatch({ type: 'UPDATE', payload: { loading: true } });
     service({
@@ -132,6 +140,7 @@ export const useTodo = () => {
         dispatch({ type: 'UPDATE', payload: { loading: false } });
       });
   };
+
   const recoverTodo = (item: ITodo) => {
     dispatch({ type: 'UPDATE', payload: { loading: true } });
     service({
@@ -148,11 +157,13 @@ export const useTodo = () => {
         dispatch({ type: 'UPDATE', payload: { loading: false } });
       });
   };
+
   const signOut = () => {
     localStorage.setItem('token', '');
     goPage('/ndzy-todos/');
     window.location.reload();
   };
+
   const login = (values: { mobile: string; password: string }) => {
     dispatch({ type: 'UPDATE', payload: { loading: true } });
     service({
@@ -172,6 +183,7 @@ export const useTodo = () => {
         dispatch({ type: 'UPDATE', payload: { loading: false } });
       });
   };
+
   const register = (values: { nickname: string; mobile: string; password: string }, cb?: any) => {
     dispatch({ type: 'UPDATE', payload: { loading: true } });
     service({
@@ -189,6 +201,7 @@ export const useTodo = () => {
         dispatch({ type: 'UPDATE', payload: { loading: false } });
       });
   };
+
   const delTag = (id: string) => {
     dispatch({ type: 'UPDATE', payload: { loading: true } });
     service({
@@ -202,6 +215,7 @@ export const useTodo = () => {
         dispatch({ type: 'UPDATE', payload: { loading: false } });
       });
   };
+
   const handleCreateTag = () => {
     if (!inputValue) {
       return;
@@ -222,6 +236,7 @@ export const useTodo = () => {
         dispatch({ type: 'UPDATE', payload: { loading: false } });
       });
   };
+
   const getAllRecord = () => {
     dispatch({ type: 'UPDATE', payload: { loading: true } });
     service({
@@ -244,6 +259,7 @@ export const useTodo = () => {
         dispatch({ type: 'UPDATE', payload: { loading: false } });
       });
   };
+
   const addRecord = (values: any) => {
     dispatch({ type: 'UPDATE', payload: { loading: true } });
     const { text, keyBase, ivBase } = encrypt(values.txt);
@@ -265,6 +281,7 @@ export const useTodo = () => {
         dispatch({ type: 'UPDATE', payload: { loading: false } });
       });
   };
+
   const updateRecord = (id: string, values: any) => {
     dispatch({ type: 'UPDATE', payload: { loading: true } });
     const { text, keyBase, ivBase } = encrypt(values.txt);
@@ -287,6 +304,7 @@ export const useTodo = () => {
         dispatch({ type: 'UPDATE', payload: { loading: false } });
       });
   };
+
   const delRecord = (id: string) => {
     dispatch({ type: 'UPDATE', payload: { loading: true } });
     service({
@@ -300,6 +318,7 @@ export const useTodo = () => {
         dispatch({ type: 'UPDATE', payload: { loading: false } });
       });
   };
+
   const switchService = () => {
     if (localStorage.getItem('USE_LOCAL_SERVICE') === '0') {
       localStorage.setItem('USE_LOCAL_SERVICE', '1');
@@ -308,6 +327,7 @@ export const useTodo = () => {
     }
     window.location.reload();
   };
+
   return {
     inputValue,
     initUser,
