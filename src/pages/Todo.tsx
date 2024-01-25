@@ -11,7 +11,7 @@ import Drawer from '../component/Drawer';
 import Search from '../component/Search';
 
 const Todo = () => {
-  const ContainerHeight = 400;
+  const ContainerHeight = 600;
   const ref = useRef(null);
   const size = useSize(ref);
   const { state } = useContext(ReduxContext);
@@ -104,8 +104,12 @@ const Todo = () => {
   ];
 
   return (
-    <div ref={ref}>
-      <div className="center">{state.loading && <Spin />}</div>
+    <div ref={ref} style={{ height: '100%' }}>
+      {state.loading && (
+        <div className="center">
+          <Spin />
+        </div>
+      )}
 
       <Search />
 

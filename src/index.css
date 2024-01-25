@@ -39,3 +39,8 @@ body {
 .p-16 {
   padding: 16px;
 }
+
+.layout-content {
+  height: 100vh;
+  overflow-y: hidden;
+}

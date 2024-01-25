@@ -4,7 +4,6 @@ import { Button, Layout as AntLayout, Space, Dropdown } from 'antd';
 import type { MenuProps } from 'antd';
 import { ReduxContext } from '../redux';
 import { useTodo } from '../hooks';
-import EditTodo from '../component/EditTodo';
 import ITag from '../component/Tag';
 import Drawer from '../component/Drawer';
 import Login from '../component/Login';
@@ -47,14 +46,6 @@ const Layout = () => {
         </Button>
       ),
     },
-    {
-      key: '4',
-      label: (
-        <Button type="link" onClick={() => goPage('/ndzy-todos/records')}>
-          记录
-        </Button>
-      ),
-    },
   ];
 
   return (
@@ -79,9 +70,9 @@ const Layout = () => {
             <ITag />
           </Drawer>
 
-          <Drawer title="新建" btnName="新建">
-            <EditTodo />
-          </Drawer>
+          <Button type="link" onClick={() => goPage('/ndzy-todos/records')}>
+            记录
+          </Button>
 
           <Dropdown menu={{ items }}>
             <a onClick={(e) => e.preventDefault()}>其他</a>

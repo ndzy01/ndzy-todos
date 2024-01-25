@@ -5,7 +5,7 @@ import { cloneElement, isValidElement } from 'react';
 const C = ({ children, ...rest }: any) => (isValidElement(children) ? cloneElement(children, { ...rest }) : children);
 const Drawer = ({ title, btnName, children, ...rest }: any) => {
   const [state, setState] = useSetState({ open: false });
-  
+
   return (
     <>
       <Button type="link" onClick={() => setState({ open: true })}>
