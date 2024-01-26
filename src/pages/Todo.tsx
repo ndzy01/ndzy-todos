@@ -1,5 +1,5 @@
 import { useMount, useSize } from 'ahooks';
-import { Button, Space, Popconfirm, Spin, Table, List } from 'antd';
+import { Button, Space, Popconfirm, Table, List } from 'antd';
 import type { TableProps } from 'antd';
 import VirtualList from 'rc-virtual-list';
 import { useContext, useRef } from 'react';
@@ -105,16 +105,11 @@ const Todo = () => {
 
   return (
     <div ref={ref} style={{ height: '100%' }}>
-      {state.loading && (
-        <div className="center">
-          <Spin />
-        </div>
-      )}
-
       <Search />
 
       {Number(size?.width) > 800 ? (
         <Table
+          loading={state.loading}
           virtual
           columns={columns}
           scroll={{ x: 900, y: 600 }}
@@ -124,8 +119,8 @@ const Todo = () => {
           locale={{ emptyText: <div className="center">暂无待办事项</div> }}
         />
       ) : (
-        <List>
-          <VirtualList data={state.list} height={ContainerHeight} itemHeight={40} itemKey="email">
+        <List loading={state.loading}>
+          <VirtualList data={state.list} height={ContainerHeight} itemHeight={40} itemKey="id">
             {(item) => (
               <List.Item
                 key={item.id}

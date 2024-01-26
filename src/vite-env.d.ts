@@ -14,13 +14,6 @@ interface ITodo {
   updatedAt: string;
 }
 
-interface ITodoRecord {
-  name: string;
-  detail: string;
-  tagId: string;
-  deadline: string;
-}
-
 interface TodoTag {
   id: string;
   name: string;
@@ -32,8 +25,6 @@ interface User {
   nickname: string;
   name: string;
   role: string;
-  createdAt: string;
-  updatedAt: string;
 }
 
 declare module '@wxcloud/cloud-sdk' {

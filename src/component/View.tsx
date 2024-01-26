@@ -1,12 +1,17 @@
 import dayjs from 'dayjs';
 import { Space } from 'antd';
-import Preview from './Preview';
 import Drawer from './Drawer';
+import { generateUUID } from '../utils';
 
 const View = (props: any) => {
   return (
     <Drawer title="查看" btnName="查看">
-      <Preview value={props.detail} />
+      <div
+        style={{ padding: '0 8px' }}
+        id={`preview-${generateUUID()}`}
+        className="ndzy-preview"
+        dangerouslySetInnerHTML={{ __html: props.detail }}
+      />
       <div>
         <Space>
           <span style={{ color: 'blue' }}>创建人：{props.userName || '--'}</span>

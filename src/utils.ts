@@ -100,5 +100,3 @@ export const formItemLayout = {
     sm: { span: 18 },
   },
 };
-
-export const buttonItemLayout = { wrapperCol: { span: 14, offset: 2 } };

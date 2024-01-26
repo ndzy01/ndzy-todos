@@ -14,7 +14,7 @@ const Search = () => {
   const [form] = Form.useForm();
   const ref = useRef(null);
   const size = useSize(ref);
-  const { getAllTodo } = useTodo();
+  const { getAllTodo, switchService } = useTodo();
   const { state } = useContext(ReduxContext);
   const span = Number(size?.width) > 800 ? 8 : 24;
   const [expand, setExpand] = useState(false);
@@ -123,10 +123,29 @@ const Search = () => {
                 <DownOutlined rotate={expand ? 180 : 0} />
                 {expand ? '收起' : '展开'}
               </a>
-
+            </Space>
+          </Col>
+          <Col span={span}>
+            <Space>
               <Drawer title="新建" btnName="新建">
                 <EditTodo />
               </Drawer>
+
+              <Button type="link" onClick={switchService}>
+                环境：{localStorage.getItem('USE_LOCAL_SERVICE') === '0' ? '本地环境' : '线上环境'}
+              </Button>
+
+              <div>
+                {state.user ? (
+                  <div style={{ minWidth: 33 }} className="sky-blue center">
+                    用户：{state.user.name || state.user.nickname}
+                  </div>
+                ) : (
+                  <div style={{ minWidth: 33 }} className="sky-blue center">
+                    用户：游客
+                  </div>
+                )}
+              </div>
             </Space>
           </Col>
         </Row>

@@ -1,19 +1,12 @@
-import { useNavigate } from 'react-router-dom';
 import dayjs from 'dayjs';
-import { useContext, useState } from 'react';
+import { useContext } from 'react';
 import { ReduxContext } from './redux';
 import serviceAxios, { wxService } from './http';
 import { encrypt, decrypt } from './utils';
 
 export const useTodo = () => {
   const service = (localStorage.getItem('USE_LOCAL_SERVICE') || '0') === '0' ? serviceAxios : wxService;
-  const navigate = useNavigate();
   const { dispatch } = useContext(ReduxContext);
-  const [inputValue, setInputValue] = useState('');
-
-  const goPage = (path: string, options: any = {}) => {
-    navigate(path, { ...options });
-  };
 
   const initUser = () => {
     dispatch({ type: 'UPDATE', payload: { loading: true } });
@@ -158,167 +151,6 @@ export const useTodo = () => {
       });
   };
 
-  const signOut = () => {
-    localStorage.setItem('token', '');
-    goPage('/ndzy-todos/');
-    window.location.reload();
-  };
-
-  const login = (values: { mobile: string; password: string }) => {
-    dispatch({ type: 'UPDATE', payload: { loading: true } });
-    service({
-      url: '/users/login',
-      method: 'POST',
-      data: values,
-    })
-      .then((res: any) => {
-        dispatch({ type: 'UPDATE', payload: { loading: false } });
-        if (res && res.data && res.data.token) {
-          localStorage.setItem('token', res.data.token);
-          goPage('/ndzy-todos/');
-          window.location.reload();
-        }
-      })
-      .catch(() => {
-        dispatch({ type: 'UPDATE', payload: { loading: false } });
-      });
-  };
-
-  const register = (values: { nickname: string; mobile: string; password: string }, cb?: any) => {
-    dispatch({ type: 'UPDATE', payload: { loading: true } });
-    service({
-      url: '/users/register',
-      method: 'POST',
-      data: values,
-    })
-      .then((res: any) => {
-        dispatch({ type: 'UPDATE', payload: { loading: false } });
-        if (res.status === 0) {
-          cb && cb();
-        }
-      })
-      .catch(() => {
-        dispatch({ type: 'UPDATE', payload: { loading: false } });
-      });
-  };
-
-  const delTag = (id: string) => {
-    dispatch({ type: 'UPDATE', payload: { loading: true } });
-    service({
-      url: `/tags/${id}`,
-      method: 'DELETE',
-    })
-      .then(() => {
-        initTags();
-      })
-      .catch(() => {
-        dispatch({ type: 'UPDATE', payload: { loading: false } });
-      });
-  };
-
-  const handleCreateTag = () => {
-    if (!inputValue) {
-      return;
-    }
-    dispatch({ type: 'UPDATE', payload: { loading: true } });
-    service({
-      url: '/tags',
-      method: 'POST',
-      data: {
-        name: inputValue,
-      },
-    })
-      .then(() => {
-        setInputValue('');
-        initTags();
-      })
-      .catch(() => {
-        dispatch({ type: 'UPDATE', payload: { loading: false } });
-      });
-  };
-
-  const getAllRecord = () => {
-    dispatch({ type: 'UPDATE', payload: { loading: true } });
-    service({
-      url: '/records',
-      method: 'GET',
-    })
-      .then((res: any) => {
-        dispatch({
-          type: 'UPDATE',
-          payload: {
-            records: res.data.map((item: any) => ({
-              ...item,
-              txt: decrypt(item.txt, item.keyBase, item.ivBase),
-            })),
-            loading: false,
-          },
-        });
-      })
-      .catch(() => {
-        dispatch({ type: 'UPDATE', payload: { loading: false } });
-      });
-  };
-
-  const addRecord = (values: any) => {
-    dispatch({ type: 'UPDATE', payload: { loading: true } });
-    const { text, keyBase, ivBase } = encrypt(values.txt);
-    service({
-      url: '/records',
-      method: 'POST',
-      data: {
-        ...values,
-        txt: text,
-        keyBase,
-        ivBase,
-      },
-    })
-      .then(() => {
-        dispatch({ type: 'UPDATE', payload: { loading: false } });
-        getAllRecord();
-      })
-      .catch(() => {
-        dispatch({ type: 'UPDATE', payload: { loading: false } });
-      });
-  };
-
-  const updateRecord = (id: string, values: any) => {
-    dispatch({ type: 'UPDATE', payload: { loading: true } });
-    const { text, keyBase, ivBase } = encrypt(values.txt);
-    service({
-      url: `/records/${id}`,
-      method: 'PATCH',
-      data: {
-        name: values.name,
-        txt: text,
-        keyBase,
-        ivBase,
-        txtInfo: values.txtInfo,
-      },
-    })
-      .then(() => {
-        dispatch({ type: 'UPDATE', payload: { loading: false } });
-        getAllRecord();
-      })
-      .catch(() => {
-        dispatch({ type: 'UPDATE', payload: { loading: false } });
-      });
-  };
-
-  const delRecord = (id: string) => {
-    dispatch({ type: 'UPDATE', payload: { loading: true } });
-    service({
-      url: `/records/${id}`,
-      method: 'DELETE',
-    })
-      .then(() => {
-        getAllRecord();
-      })
-      .catch(() => {
-        dispatch({ type: 'UPDATE', payload: { loading: false } });
-      });
-  };
-
   const switchService = () => {
     if (localStorage.getItem('USE_LOCAL_SERVICE') === '0') {
       localStorage.setItem('USE_LOCAL_SERVICE', '1');
@@ -329,26 +161,14 @@ export const useTodo = () => {
   };
 
   return {
-    inputValue,
     initUser,
     initTags,
     createTodo,
     editTodo,
-    goPage,
     getAllTodo,
     finishTodo,
     delTodo,
     recoverTodo,
-    signOut,
-    login,
-    register,
-    delTag,
-    handleCreateTag,
-    setInputValue,
     switchService,
-    getAllRecord,
-    addRecord,
-    updateRecord,
-    delRecord,
   };
 };

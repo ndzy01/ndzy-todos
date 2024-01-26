@@ -5,7 +5,6 @@ interface State {
   user?: User;
   list: ITodo[];
   tags: TodoTag[];
-  records: any[];
 }
 
 interface Action {
@@ -22,7 +21,6 @@ export const initialState: State = {
   loading: false,
   list: [],
   tags: [],
-  records: [],
 };
 
 export const reducer = (state: State, action: Action): State => {
