@@ -15,7 +15,7 @@ export const useTodo = () => {
     dispatch({ type: 'UPDATE', payload: { loading: true } });
     service({ url: '/users/loginInfo', method: 'GET' })
       .then((res: any) => {
-        dispatch({ type: 'UPDATE', payload: { user: res.data[0], loading: false } });
+        dispatch({ type: 'UPDATE', payload: { user: res.data, loading: false } });
       })
       .catch(() => {
         dispatch({ type: 'UPDATE', payload: { loading: false } });
@@ -176,8 +176,6 @@ export const useTodo = () => {
 
   const getAllMessages = (params: { name?: string }) => {
     service({ url: '/chats', method: 'GET', params }).then((res: any) => {
-      console.log('ndzy---log---ndzy', res, '------');
-
       dispatch({
         type: 'UPDATE',
         payload: {

@@ -27,7 +27,7 @@ const Todo = () => {
         getAllMessages({ name: room });
       }
     });
-  }, 1000);
+  }, 5000);
 
   useMount(() => {
     initUser();

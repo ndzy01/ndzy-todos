@@ -21,9 +21,9 @@ const CreateRoom = () => {
       <Input value={room} onChange={(e) => setRoom(e.target.value)} />
       <Button
         onClick={() => {
-          if (!state.user || !room) return;
-
-          socket.emit('createRoom', { roomName: room, userId: state.user?.id });
+          if (state.user && room) {
+            socket.emit('createRoom', { roomName: room, userId: state.user?.id });
+          }
         }}
       >
         创建房间
