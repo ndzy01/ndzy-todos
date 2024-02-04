@@ -5,7 +5,7 @@ import { ReduxContext } from '../redux';
 
 const MsgList = ({ room }: any) => {
   const [msg, setMsg] = useState('');
-  const { socket } = useTodo();
+  const { socket, getAllMessages } = useTodo();
   const { state } = useContext(ReduxContext);
 
   return (
@@ -27,6 +27,7 @@ const MsgList = ({ room }: any) => {
             message: msg,
             userId: state.user?.id,
           });
+          getAllMessages({ name: room });
           setMsg('');
         }}
       >

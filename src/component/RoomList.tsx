@@ -3,7 +3,7 @@ import { useContext } from 'react';
 import { useTodo } from '../hooks';
 import { ReduxContext } from '../redux';
 
-const RoomList = ({ setRoom }: any) => {
+const RoomList = ({ setRoom, room }: any) => {
   const { socket } = useTodo();
   const { state } = useContext(ReduxContext);
 
@@ -19,7 +19,7 @@ const RoomList = ({ setRoom }: any) => {
     >
       {state.rooms.map((item) => {
         return (
-          <div>
+          <div style={{ color: room === item.name ? 'pink' : '' }}>
             房间：{item.name}&nbsp;&nbsp;
             <Button
               onClick={() => {

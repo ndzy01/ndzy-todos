@@ -120,7 +120,7 @@ const Todo = () => {
   return (
     <div ref={ref} style={{ height: '100%' }}>
       <CreateRoom />
-      <RoomList setRoom={setRoom} />
+      <RoomList setRoom={setRoom} room={room} />
       <MsgList room={room} />
 
       <Search />
