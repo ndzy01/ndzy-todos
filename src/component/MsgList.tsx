@@ -18,7 +18,7 @@ const MsgList = ({ room }: any) => {
         padding: 16,
       }}
     >
-      <Input value={msg} onChange={(e) => setMsg(e.target.value)} />
+      <Input value={msg} onChange={(e) => setMsg(e.target.value)} placeholder="请输入信息" />
       <Button
         onClick={() => {
           if (!room) return;

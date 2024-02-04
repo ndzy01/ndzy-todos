@@ -18,7 +18,7 @@ const CreateRoom = () => {
         padding: 16,
       }}
     >
-      <Input value={room} onChange={(e) => setRoom(e.target.value)} />
+      <Input value={room} onChange={(e) => setRoom(e.target.value)} placeholder="请输入房间号" />
       <Button
         onClick={() => {
           if (state.user && room) {
