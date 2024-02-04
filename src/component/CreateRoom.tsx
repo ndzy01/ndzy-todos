@@ -5,7 +5,7 @@ import { ReduxContext } from '../redux';
 
 const CreateRoom = () => {
   const [room, setRoom] = useState('');
-  const { socket } = useTodo();
+  const { socket, getAllRooms } = useTodo();
   const { state } = useContext(ReduxContext);
 
   return (
@@ -23,6 +23,7 @@ const CreateRoom = () => {
         onClick={() => {
           if (state.user && room) {
             socket.emit('createRoom', { roomName: room, userId: state.user?.id });
+            getAllRooms();
           }
         }}
       >
