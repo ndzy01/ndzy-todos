@@ -1,8 +1,11 @@
 import dayjs from 'dayjs';
 import { useContext } from 'react';
+import io from 'socket.io-client';
 import { ReduxContext } from './redux';
 import serviceAxios, { wxService } from './http';
 import { encrypt, decrypt } from './utils';
+
+const socket = io('https://ndzy-service-89589-7-1307521321.sh.run.tcloudbase.com');
 
 export const useTodo = () => {
   const service = (localStorage.getItem('USE_LOCAL_SERVICE') || '0') === '0' ? serviceAxios : wxService;
@@ -160,6 +163,30 @@ export const useTodo = () => {
     window.location.reload();
   };
 
+  const getAllRooms = () => {
+    service({ url: '/chats/rooms', method: 'GET' }).then((res: any) => {
+      dispatch({
+        type: 'UPDATE',
+        payload: {
+          rooms: res.data,
+        },
+      });
+    });
+  };
+
+  const getAllMessages = (params: { name?: string }) => {
+    service({ url: '/chats', method: 'GET', params }).then((res: any) => {
+      console.log('ndzy---log---ndzy', res, '------');
+
+      dispatch({
+        type: 'UPDATE',
+        payload: {
+          messages: res.data,
+        },
+      });
+    });
+  };
+
   return {
     initUser,
     initTags,
@@ -170,5 +197,8 @@ export const useTodo = () => {
     delTodo,
     recoverTodo,
     switchService,
+    getAllRooms,
+    getAllMessages,
+    socket,
   };
 };
