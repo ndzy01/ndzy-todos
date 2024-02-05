@@ -49,19 +49,21 @@ const MsgList = () => {
               style={{
                 borderBottom: '0.1px dashed #666',
                 display: 'grid',
-                gridTemplateColumns: 'repeat(3, 1fr)',
+                gridTemplateColumns: 'repeat(2, 1fr)',
                 gap: 16,
                 padding: 4,
               }}
             >
-              <div>用户：{item.sender.name}</div>
+              <div>
+                <div>用户：{item.sender.name}</div>
+                <div>{item.createdAt}</div>
+              </div>
               <div
                 style={{ padding: '0 8px' }}
                 id={`preview-${generateUUID()}`}
                 className="ndzy-preview"
                 dangerouslySetInnerHTML={{ __html: item.text }}
               />
-              <div>{item.createdAt}</div>
             </div>
           );
         })}
