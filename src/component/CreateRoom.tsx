@@ -2,6 +2,7 @@ import { Button, Input } from 'antd';
 import { useContext, useState } from 'react';
 import { useTodo } from '../hooks';
 import { ReduxContext } from '../redux';
+import './index.css';
 
 const CreateRoom = () => {
   const [room, setRoom] = useState('');
@@ -9,16 +10,11 @@ const CreateRoom = () => {
   const { state } = useContext(ReduxContext);
 
   return (
-    <div
-      style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(1, 1fr)',
-        gap: 16,
-        border: '1px dashed #666',
-        padding: 16,
-      }}
-    >
-      <Input value={room} onChange={(e) => setRoom(e.target.value)} placeholder="请输入房间号" />
+    <div className="create-room">
+      <h2>创建新聊天室</h2>
+
+      <Input value={room} onChange={(e) => setRoom(e.target.value)} placeholder="输入聊天室名称" />
+
       <Button
         onClick={() => {
           if (state.user && room) {

@@ -1,38 +1,32 @@
-import { Button } from 'antd';
 import { useContext } from 'react';
 import { useTodo } from '../hooks';
 import { ReduxContext } from '../redux';
+import './index.css';
 
 const RoomList = () => {
   const { socket, navigate, setRoom } = useTodo();
   const { state } = useContext(ReduxContext);
 
   return (
-    <div
-      style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(1, 1fr)',
-        gap: 16,
-        border: '1px dashed #666',
-        padding: 16,
-      }}
-    >
-      {state.rooms.map((item) => {
-        return (
-          <div key={item.id} style={{ color: state.room === item.name ? 'pink' : '' }}>
-            房间：{item.name}&nbsp;&nbsp;
-            <Button
+    <div className="room-selection">
+      <h2>选择聊天室</h2>
+      <div className="room-list">
+        {state.rooms.map((item) => {
+          return (
+            <button
+              key={item.id}
+              className="room-button"
               onClick={() => {
                 setRoom(item.name);
                 socket.emit('joinRoom', { roomName: item.name, userId: state.user?.id });
                 navigate('/ndzy-todos/room');
               }}
             >
-              加入
-            </Button>
-          </div>
-        );
-      })}
+              {item.name}
+            </button>
+          );
+        })}
+      </div>
     </div>
   );
 };

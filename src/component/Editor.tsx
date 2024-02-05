@@ -5,7 +5,7 @@ import { IDomEditor, IEditorConfig, IToolbarConfig, Boot } from '@wangeditor/edi
 import markdownModule from '@wangeditor/plugin-md';
 
 Boot.registerModule(markdownModule);
-function MyEditor({ value, onChange }: any) {
+function MyEditor({ value, onChange, showToolbar = true }: any) {
   // editor 实例
   const [editor, setEditor] = useState<IDomEditor | null>(null);
 
@@ -36,13 +36,15 @@ function MyEditor({ value, onChange }: any) {
 
   return (
     <>
-      <div style={{ border: '1px solid #ccc', zIndex: 100 }}>
-        <Toolbar
-          editor={editor}
-          defaultConfig={toolbarConfig}
-          mode="default"
-          style={{ borderBottom: '1px solid #ccc' }}
-        />
+      <div style={{ border: '1px solid #ccc', zIndex: 100, width: '100%' }}>
+        {showToolbar && (
+          <Toolbar
+            editor={editor}
+            defaultConfig={toolbarConfig}
+            mode="default"
+            style={{ borderBottom: '1px solid #ccc' }}
+          />
+        )}
         <Editor
           defaultConfig={editorConfig}
           value={html}
