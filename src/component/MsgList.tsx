@@ -4,6 +4,8 @@ import { useTodo } from '../hooks';
 import { ReduxContext } from '../redux';
 import Editor from '../component/Editor';
 import { useFocusWithin, useInterval } from 'ahooks';
+import Drawer from './Drawer';
+import { generateUUID } from '../utils';
 
 const MsgList = () => {
   const [t, seT] = useState<any>(undefined);
@@ -39,11 +41,12 @@ const MsgList = () => {
         padding: 16,
       }}
     >
-      <div style={{ height: 200, overflow: 'scroll' }}>
+      <div style={{ height: 600, overflow: 'scroll' }}>
         {state.messages.map((item) => {
           return (
             <div
               style={{
+                borderBottom: '0.1px dashed #666',
                 display: 'grid',
                 gridTemplateColumns: 'repeat(3, 1fr)',
                 gap: 16,
@@ -51,27 +54,35 @@ const MsgList = () => {
               }}
             >
               <div>用户：{item.sender.nickname}</div>
-              <div>消息：{item.text}</div>
+              <div
+                style={{ padding: '0 8px' }}
+                id={`preview-${generateUUID()}`}
+                className="ndzy-preview"
+                dangerouslySetInnerHTML={{ __html: item.text }}
+              />
               <div>{item.createdAt}</div>
             </div>
           );
         })}
       </div>
-      <Editor value={msg} onChange={(v: any) => setMsg(v)} placeholder="请输入信息" />
-      <Button
-        onClick={() => {
-          if (!state.room) return;
-          socket.emit('sendMessageToRoom', {
-            roomName: state.room,
-            message: msg,
-            userId: state.user?.id,
-          });
-          getAllMessages({ name: state.room });
-          setMsg('');
-        }}
-      >
-        发送
-      </Button>
+
+      <Drawer title="发送消息" btnName="发送消息">
+        <Editor value={msg} onChange={(v: any) => setMsg(v)} placeholder="请输入" />
+        <Button
+          onClick={() => {
+            if (!state.room) return;
+            socket.emit('sendMessageToRoom', {
+              roomName: state.room,
+              message: msg,
+              userId: state.user?.id,
+            });
+            getAllMessages({ name: state.room });
+            setMsg('');
+          }}
+        >
+          发送
+        </Button>
+      </Drawer>
     </div>
   );
 };

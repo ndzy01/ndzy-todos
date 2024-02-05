@@ -1,5 +1,5 @@
 import { Outlet } from 'react-router-dom';
-import { Layout as AntLayout, Button } from 'antd';
+import { Layout as AntLayout, Button, Space } from 'antd';
 import { useTodo } from '../hooks';
 import { useEffect } from 'react';
 
@@ -15,8 +15,10 @@ const Layout = () => {
     <AntLayout className="ndzy-layout">
       <Content>
         <div className="layout-content p-16">
-          <Button onClick={() => navigate('/ndzy-todos')}>主页</Button>
-          <Button onClick={() => navigate('/ndzy-todos/rooms')}>聊天</Button>
+          <Space>
+            <Button onClick={() => navigate('/ndzy-todos')}>主页</Button>
+            <Button onClick={() => navigate('/ndzy-todos/rooms')}>聊天</Button>
+          </Space>
           <Outlet />
         </div>
       </Content>

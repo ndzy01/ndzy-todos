@@ -7,7 +7,7 @@ const Room = () => {
 
   return (
     <div>
-      房间： {state.room}
+      <div className="center"> 房间： {state.room}</div>
       <MsgList />
     </div>
   );
