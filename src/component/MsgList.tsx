@@ -53,7 +53,7 @@ const MsgList = () => {
                 padding: 4,
               }}
             >
-              <div>用户：{item.sender.nickname}</div>
+              <div>用户：{item.sender.name}</div>
               <div
                 style={{ padding: '0 8px' }}
                 id={`preview-${generateUUID()}`}

@@ -138,7 +138,7 @@ const Search = () => {
               <div>
                 {state.user ? (
                   <div style={{ minWidth: 33 }} className="sky-blue center">
-                    用户：{state.user.name || state.user.nickname}
+                    用户：{state.user.name}
                   </div>
                 ) : (
                   <div style={{ minWidth: 33 }} className="sky-blue center">

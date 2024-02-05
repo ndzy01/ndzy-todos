@@ -22,7 +22,6 @@ interface TodoTag {
 
 interface User {
   id: string;
-  nickname: string;
   name: string;
   role: string;
 }
