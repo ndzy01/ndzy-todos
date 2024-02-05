@@ -19,7 +19,7 @@ const RoomList = () => {
     >
       {state.rooms.map((item) => {
         return (
-          <div style={{ color: state.room === item.name ? 'pink' : '' }}>
+          <div key={item.id} style={{ color: state.room === item.name ? 'pink' : '' }}>
             房间：{item.name}&nbsp;&nbsp;
             <Button
               onClick={() => {

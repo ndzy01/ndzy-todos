@@ -45,6 +45,7 @@ const MsgList = () => {
         {state.messages.map((item) => {
           return (
             <div
+              key={item.id}
               style={{
                 borderBottom: '0.1px dashed #666',
                 display: 'grid',
