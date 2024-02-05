@@ -191,6 +191,17 @@ export const useTodo = () => {
     });
   };
 
+  const getMembers = (params: { name?: string }) => {
+    service({ url: '/chats/room/members', method: 'GET', params }).then((res: any) => {
+      dispatch({
+        type: 'UPDATE',
+        payload: {
+          members: res.data,
+        },
+      });
+    });
+  };
+
   return {
     initUser,
     initTags,
@@ -206,5 +217,6 @@ export const useTodo = () => {
     socket,
     setRoom,
     navigate,
+    getMembers,
   };
 };

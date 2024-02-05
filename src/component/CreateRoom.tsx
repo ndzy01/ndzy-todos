@@ -28,7 +28,7 @@ const CreateRoom = () => {
           }
         }}
       >
-        创建房间
+        创建并加入房间
       </Button>
     </div>
   );

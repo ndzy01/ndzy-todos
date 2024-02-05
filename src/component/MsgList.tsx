@@ -1,19 +1,20 @@
 import { Button } from 'antd';
-import { useContext, useEffect, useState, useRef } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import { useTodo } from '../hooks';
 import { ReduxContext } from '../redux';
 import Editor from '../component/Editor';
-import { useFocusWithin, useInterval } from 'ahooks';
+import { useFocusWithin, useHover, useInterval } from 'ahooks';
 import Drawer from './Drawer';
 import { generateUUID } from '../utils';
 
 const MsgList = () => {
+  const ref = useRef(null);
+  const isHovering = useHover(ref);
   const [t, seT] = useState<any>(undefined);
   const [msg, setMsg] = useState('');
-  const { socket, getAllMessages } = useTodo();
+  const { socket, getAllMessages, getMembers } = useTodo();
   const { state } = useContext(ReduxContext);
-  const ref = useRef(null);
-  const isFocusWithin = useFocusWithin(ref, {
+  const isFocusWithin = useFocusWithin(() => document.getElementById('focus-area'), {
     onFocus: () => {
       seT(1500);
     },
@@ -24,15 +25,26 @@ const MsgList = () => {
 
   useEffect(() => {
     getAllMessages({ name: state.room });
+    getMembers({ name: state.room });
   }, []);
 
   useInterval(() => {
     getAllMessages({ name: state.room });
+    getMembers({ name: state.room });
   }, t);
+
+  useEffect(() => {
+    if (isHovering) {
+      seT(1500);
+    } else {
+      seT(undefined);
+    }
+  }, [isHovering]);
 
   return (
     <div
       ref={ref}
+      id="focus-area"
       style={{
         display: 'grid',
         gridTemplateColumns: 'repeat(1, 1fr)',

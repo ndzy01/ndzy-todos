@@ -8,6 +8,7 @@ interface State {
   messages: any[];
   rooms: any[];
   room: string;
+  members: any[];
 }
 
 interface Action {
@@ -27,6 +28,7 @@ export const initialState: State = {
   rooms: [],
   messages: [],
   room: '',
+  members: [],
 };
 
 export const reducer = (state: State, action: Action): State => {
