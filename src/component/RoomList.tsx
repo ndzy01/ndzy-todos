@@ -3,8 +3,8 @@ import { useContext } from 'react';
 import { useTodo } from '../hooks';
 import { ReduxContext } from '../redux';
 
-const RoomList = ({ setRoom, room }: any) => {
-  const { socket } = useTodo();
+const RoomList = () => {
+  const { socket, navigate, setRoom } = useTodo();
   const { state } = useContext(ReduxContext);
 
   return (
@@ -19,12 +19,13 @@ const RoomList = ({ setRoom, room }: any) => {
     >
       {state.rooms.map((item) => {
         return (
-          <div style={{ color: room === item.name ? 'pink' : '' }}>
+          <div style={{ color: state.room === item.name ? 'pink' : '' }}>
             房间：{item.name}&nbsp;&nbsp;
             <Button
               onClick={() => {
                 setRoom(item.name);
                 socket.emit('joinRoom', { roomName: item.name, userId: state.user?.id });
+                navigate('/ndzy-todos/room');
               }}
             >
               加入

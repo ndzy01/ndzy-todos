@@ -1,40 +1,26 @@
-import { useInterval, useMount, useSize } from 'ahooks';
+import { useMount, useSize } from 'ahooks';
 import { Button, Space, Popconfirm, Table, List } from 'antd';
 import type { TableProps } from 'antd';
 import VirtualList from 'rc-virtual-list';
-import { useContext, useRef, useState } from 'react';
+import { useContext, useRef } from 'react';
 import { ReduxContext } from '../redux';
 import { useTodo } from '../hooks';
 import View from '../component/View';
 import EditTodo from '../component/EditTodo';
 import Drawer from '../component/Drawer';
 import Search from '../component/Search';
-import CreateRoom from '../component/CreateRoom';
-import RoomList from '../component/RoomList';
-import MsgList from '../component/MsgList';
 
 const Todo = () => {
-  const [room, setRoom] = useState();
   const ContainerHeight = 600;
   const ref = useRef(null);
   const size = useSize(ref);
   const { state } = useContext(ReduxContext);
-  const { initUser, initTags, getAllTodo, finishTodo, delTodo, recoverTodo, getAllRooms, getAllMessages } = useTodo();
-
-  useInterval(() => {
-    setTimeout(() => {
-      if (room) {
-        getAllMessages({ name: room });
-      }
-    });
-  }, 5000);
+  const { initUser, initTags, getAllTodo, finishTodo, delTodo, recoverTodo } = useTodo();
 
   useMount(() => {
     initUser();
     initTags();
     getAllTodo();
-    getAllRooms();
-    getAllMessages({});
   });
 
   const columns: TableProps<any>['columns'] = [
@@ -119,10 +105,6 @@ const Todo = () => {
 
   return (
     <div ref={ref} style={{ height: '100%' }}>
-      <CreateRoom />
-      <RoomList setRoom={setRoom} room={room} />
-      <MsgList room={room} />
-
       <Search />
 
       {Number(size?.width) > 800 ? (

@@ -7,6 +7,7 @@ interface State {
   tags: TodoTag[];
   messages: any[];
   rooms: any[];
+  room: string;
 }
 
 interface Action {
@@ -25,6 +26,7 @@ export const initialState: State = {
   tags: [],
   rooms: [],
   messages: [],
+  room: '',
 };
 
 export const reducer = (state: State, action: Action): State => {

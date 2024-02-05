@@ -24,6 +24,7 @@ const CreateRoom = () => {
           if (state.user && room) {
             socket.emit('createRoom', { roomName: room, userId: state.user?.id });
             getAllRooms();
+            setRoom('');
           }
         }}
       >

@@ -4,12 +4,18 @@ import io from 'socket.io-client';
 import { ReduxContext } from './redux';
 import serviceAxios, { wxService } from './http';
 import { encrypt, decrypt } from './utils';
+import { useNavigate } from 'react-router-dom';
 
 const socket = io('https://ndzy-service-89589-7-1307521321.sh.run.tcloudbase.com');
 
 export const useTodo = () => {
+  const navigate = useNavigate();
   const service = (localStorage.getItem('USE_LOCAL_SERVICE') || '0') === '0' ? serviceAxios : wxService;
   const { dispatch } = useContext(ReduxContext);
+
+  const setRoom = (room: string) => {
+    dispatch({ type: 'UPDATE', payload: { room } });
+  };
 
   const initUser = () => {
     dispatch({ type: 'UPDATE', payload: { loading: true } });
@@ -198,5 +204,7 @@ export const useTodo = () => {
     getAllRooms,
     getAllMessages,
     socket,
+    setRoom,
+    navigate,
   };
 };
