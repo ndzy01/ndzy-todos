@@ -3,25 +3,30 @@ import { useContext, useEffect, useState, useRef } from 'react';
 import { useTodo } from '../hooks';
 import { ReduxContext } from '../redux';
 import Editor from '../component/Editor';
-import { useFocusWithin } from 'ahooks';
+import { useFocusWithin, useInterval } from 'ahooks';
 
 const MsgList = () => {
+  const [t, seT] = useState<any>(undefined);
   const [msg, setMsg] = useState('');
   const { socket, getAllMessages } = useTodo();
   const { state } = useContext(ReduxContext);
   const ref = useRef(null);
   const isFocusWithin = useFocusWithin(ref, {
     onFocus: () => {
-      getAllMessages({ name: state.room });
+      seT(1500);
     },
     onBlur: () => {
-      //
+      seT(undefined);
     },
   });
 
   useEffect(() => {
     getAllMessages({ name: state.room });
   }, []);
+
+  useInterval(() => {
+    getAllMessages({ name: state.room });
+  }, t);
 
   return (
     <div
