@@ -1,26 +1,36 @@
 import { Button } from 'antd';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState, useRef } from 'react';
 import { useTodo } from '../hooks';
 import { ReduxContext } from '../redux';
 import Editor from '../component/Editor';
-import { useInterval } from 'ahooks';
+import { useFocusWithin } from 'ahooks';
 
 const MsgList = () => {
   const [msg, setMsg] = useState('');
   const { socket, getAllMessages } = useTodo();
   const { state } = useContext(ReduxContext);
+  const ref = useRef(null);
+  const isFocusWithin = useFocusWithin(ref, {
+    onFocus: () => {
+      getAllMessages({ name: state.room });
+    },
+    onBlur: () => {
+      //
+    },
+  });
 
-  useInterval(() => {
+  useEffect(() => {
     getAllMessages({ name: state.room });
-  }, 1000);
+  }, []);
 
   return (
     <div
+      ref={ref}
       style={{
         display: 'grid',
         gridTemplateColumns: 'repeat(1, 1fr)',
         gap: 16,
-        border: '1px dashed #666',
+        border: isFocusWithin ? '1px dashed #666' : '',
         padding: 16,
       }}
     >
