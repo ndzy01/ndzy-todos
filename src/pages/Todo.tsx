@@ -104,7 +104,7 @@ const Todo = () => {
   ];
 
   return (
-    <div ref={ref} style={{ height: '100%' }}>
+    <div ref={ref} style={{ height: '100%' }} className="p-16">
       <Search />
 
       {Number(size?.width) > 800 ? (

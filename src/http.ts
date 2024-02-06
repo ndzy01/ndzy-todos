@@ -1,14 +1,9 @@
+import { initCloud } from '@wxcloud/cloud-sdk';
 import axios, { AxiosRequestHeaders } from 'axios';
 import { message as antMsg } from 'antd';
-import { initCloud } from '@wxcloud/cloud-sdk';
 import { isEmpty } from 'lodash';
 
-antMsg.config({
-  top: 100,
-  duration: 3,
-  maxCount: 1,
-});
-
+const mode = import.meta.env.MODE;
 const cloud = initCloud();
 const c = cloud.Cloud({
   identityless: true,
@@ -20,23 +15,70 @@ const c = cloud.Cloud({
 });
 c.init();
 
-// 默认使用本地服务 0 本地服务 1 线上服务
-if (!localStorage.getItem('USE_LOCAL_SERVICE')) {
-  localStorage.setItem('USE_LOCAL_SERVICE', '1');
-}
+// 处理 get 请求参数
+export const objectToQueryString = (obj: any) => {
+  return Object.keys(obj)
+    .map((key) => (obj[key] ? `${encodeURIComponent(key)}=${encodeURIComponent(obj[key])}` : ''))
+    .filter((item) => item)
+    .join('&');
+};
 
-// 本地服务端口号
-if (!localStorage.getItem('BASE_URL')) {
-  localStorage.setItem('BASE_URL', 'http://localhost:3000');
-}
+export const serviceWX = (options: {
+  url: string;
+  method: 'OPTIONS' | 'GET' | 'HEAD' | 'POST' | 'PUT' | 'DELETE' | 'TRACE' | 'CONNECT' | 'PATCH' | undefined;
+  data?: any;
+  params?: any;
+}) => {
+  const { url = '', data = {}, params = {} } = options;
+  let path = url;
+  const token = localStorage.getItem('token');
+  const header: any = {
+    'X-WX-SERVICE': 'ndzy-service',
+  };
 
-const baseURL = localStorage.getItem('BASE_URL');
-const isLocalService = (localStorage.getItem('USE_LOCAL_SERVICE') || '0') === '0';
-const url = isLocalService && baseURL ? baseURL : 'https://ndzy-server.vercel.app';
+  if (token) {
+    header.Authorization = 'Basic' + ' ' + token;
+  }
+
+  if (options.method === 'GET' && !isEmpty(params)) {
+    path += '?' + objectToQueryString(params);
+  }
+
+  return new Promise((resolve, reject) => {
+    c.callContainer({
+      ...options,
+      config: {
+        env: 'prod-3gjeiq7x1fbed11e',
+      },
+      path,
+      header,
+      method: options.method,
+      data,
+    })
+      .then((res: any) => {
+        if (res?.statusCode === 401) {
+          window.location.href = `https://ndzy01.gitee.io/ndzy-login/?url=${window.location.href}`;
+        }
+
+        if (res.data.status === 1) {
+          antMsg.error(res.data.msg);
+        }
+
+        if (res.data.status === 0) {
+          antMsg.success(res.data.msg);
+        }
+
+        resolve(res.data);
+      })
+      .catch(() => {
+        reject('网络错误');
+      });
+  });
+};
 
 // 创建服务实例
 const serviceAxios = axios.create({
-  baseURL: url, // 基础请求地址
+  baseURL: 'http://localhost:3000', // 基础请求地址
   timeout: 60000, // 请求超时设置
   withCredentials: false, // 跨域请求是否需要携带 cookie
 });
@@ -91,7 +133,7 @@ serviceAxios.interceptors.response.use(
 
         case 401:
           message = '您未登录，或者登录已经超时，请先登录！';
-          console.log('ndzy---log---ndzy', message, '------');
+          window.location.href = `https://ndzy01.gitee.io/ndzy-login/?url=${window.location.href}`;
 
           break;
 
@@ -166,61 +208,6 @@ serviceAxios.interceptors.response.use(
   },
 );
 
-// 处理 get 请求参数
-export const objectToQueryString = (obj: any) => {
-  return Object.keys(obj)
-    .map((key) => (obj[key] ? `${encodeURIComponent(key)}=${encodeURIComponent(obj[key])}` : ''))
-    .filter((item) => item)
-    .join('&');
-};
+const service = mode === 'development' ? serviceAxios : serviceWX;
 
-export const wxService = (options: {
-  url: string;
-  method: 'OPTIONS' | 'GET' | 'HEAD' | 'POST' | 'PUT' | 'DELETE' | 'TRACE' | 'CONNECT' | 'PATCH' | undefined;
-  data?: any;
-  params?: any;
-}) => {
-  const { url = '', data = {}, params = {} } = options;
-  let path = url;
-  const token = localStorage.getItem('token');
-  const header: any = {
-    'X-WX-SERVICE': 'ndzy-service',
-  };
-
-  if (token) {
-    header.Authorization = 'Basic' + ' ' + token;
-  }
-
-  if (options.method === 'GET' && !isEmpty(params)) {
-    path += '?' + objectToQueryString(params);
-  }
-
-  return new Promise((resolve, reject) => {
-    c.callContainer({
-      ...options,
-      config: {
-        env: 'prod-3gjeiq7x1fbed11e',
-      },
-      path,
-      header,
-      method: options.method,
-      data,
-    })
-      .then((res: { data: any; code: number; msg: string }) => {
-        if (res.data.status === 1) {
-          antMsg.error(res.data.msg);
-        }
-
-        if (res.data.status === 0) {
-          antMsg.success(res.data.msg);
-        }
-
-        resolve(res.data);
-      })
-      .catch(() => {
-        reject('网络错误');
-      });
-  });
-};
-
-export default serviceAxios;
+export default service;

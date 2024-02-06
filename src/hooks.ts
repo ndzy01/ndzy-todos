@@ -1,21 +1,11 @@
 import dayjs from 'dayjs';
 import { useContext } from 'react';
-import io from 'socket.io-client';
 import { ReduxContext } from './redux';
-import serviceAxios, { wxService } from './http';
+import service from './http';
 import { encrypt, decrypt } from './utils';
-import { useNavigate } from 'react-router-dom';
-
-const socket = io('https://ndzy-service-89589-7-1307521321.sh.run.tcloudbase.com');
 
 export const useTodo = () => {
-  const navigate = useNavigate();
-  const service = (localStorage.getItem('USE_LOCAL_SERVICE') || '0') === '0' ? serviceAxios : wxService;
   const { dispatch } = useContext(ReduxContext);
-
-  const setRoom = (room: string) => {
-    dispatch({ type: 'UPDATE', payload: { room } });
-  };
 
   const initUser = () => {
     dispatch({ type: 'UPDATE', payload: { loading: true } });
@@ -160,48 +150,6 @@ export const useTodo = () => {
       });
   };
 
-  const switchService = () => {
-    if (localStorage.getItem('USE_LOCAL_SERVICE') === '0') {
-      localStorage.setItem('USE_LOCAL_SERVICE', '1');
-    } else {
-      localStorage.setItem('USE_LOCAL_SERVICE', '0');
-    }
-    window.location.reload();
-  };
-
-  const getAllRooms = () => {
-    service({ url: '/chats/rooms', method: 'GET' }).then((res: any) => {
-      dispatch({
-        type: 'UPDATE',
-        payload: {
-          rooms: res.data,
-        },
-      });
-    });
-  };
-
-  const getAllMessages = (params: { name?: string }) => {
-    service({ url: '/chats', method: 'GET', params }).then((res: any) => {
-      dispatch({
-        type: 'UPDATE',
-        payload: {
-          messages: res.data,
-        },
-      });
-    });
-  };
-
-  const getMembers = (params: { name?: string }) => {
-    service({ url: '/chats/room/members', method: 'GET', params }).then((res: any) => {
-      dispatch({
-        type: 'UPDATE',
-        payload: {
-          members: res.data,
-        },
-      });
-    });
-  };
-
   return {
     initUser,
     initTags,
@@ -211,12 +159,5 @@ export const useTodo = () => {
     finishTodo,
     delTodo,
     recoverTodo,
-    switchService,
-    getAllRooms,
-    getAllMessages,
-    socket,
-    setRoom,
-    navigate,
-    getMembers,
   };
 };

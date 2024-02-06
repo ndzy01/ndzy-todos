@@ -1,24 +1,12 @@
 import { Outlet } from 'react-router-dom';
-import { Layout as AntLayout, Button, Space } from 'antd';
-import { useTodo } from '../hooks';
-import { useEffect } from 'react';
+import { Layout as AntLayout } from 'antd';
 
 const { Content } = AntLayout;
 const Layout = () => {
-  const { navigate, getAllRooms } = useTodo();
-
-  useEffect(() => {
-    getAllRooms();
-  }, []);
-
   return (
     <AntLayout className="ndzy-layout">
-      <Space>
-        <Button onClick={() => navigate('/ndzy-todos')}>主页</Button>
-        <Button onClick={() => navigate('/ndzy-todos/rooms')}>聊天</Button>
-      </Space>
       <Content>
-        <div className="layout-content p-16">
+        <div className="layout-content">
           <Outlet />
         </div>
       </Content>

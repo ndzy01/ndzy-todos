@@ -6,8 +6,6 @@ import { initialState, reducer, ReduxContext } from './redux';
 import Layout from './pages/Layout';
 import Todo from './pages/Todo';
 import NoMatch from './pages/NoMatch';
-import Rooms from './pages/Rooms';
-import Room from './pages/Room';
 
 const Router = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
@@ -18,8 +16,6 @@ const Router = () => {
         <Routes>
           <Route path="/ndzy-todos/" element={<Layout />}>
             <Route index element={<Todo />} />
-            <Route path="/ndzy-todos/rooms" element={<Rooms />} />
-            <Route path="/ndzy-todos/room" element={<Room />} />
             <Route path="*" element={<NoMatch />} />
           </Route>
         </Routes>
